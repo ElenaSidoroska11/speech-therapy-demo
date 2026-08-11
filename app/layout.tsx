@@ -15,9 +15,9 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Match the Animal · Speech Therapy Demo",
+  title: "Speech Therapy Demo · Match, Spell & Letters",
   description:
-    "A playful drag-and-drop animal matching game for vocabulary, language delay, and early literacy practice.",
+    "Playful demos for vocabulary matching, spelling, letter speaking, and letter tracing — designed for speech therapy, dyslexia support, and early literacy.",
 };
 
 export default function RootLayout({

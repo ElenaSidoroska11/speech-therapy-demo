@@ -1,4 +1,4 @@
-import { AnimalMatchGame } from "@/components/animal-match/AnimalMatchGame";
+import { DemoShell } from "@/components/DemoShell";
 
 export default function Home() {
   return (
@@ -29,21 +29,8 @@ export default function Home() {
       >
         ☁️
       </span>
-      {/* <span
-        aria-hidden
-        className="pointer-events-none absolute right-[22%] top-8 text-4xl drop-shadow-sm"
-        style={{ filter: "drop-shadow(0 0 12px rgba(255,229,102,0.8))" }}
-      >
-        ☀️
-      </span> */}
 
-      <main className="relative z-10 flex flex-1 flex-col items-center px-4 py-8 sm:px-6 sm:py-12">
-        <AnimalMatchGame />
-      </main>
-
-      <footer className="relative z-10 pb-6 text-center text-sm font-semibold text-teal-900/60">
-        Built for speech therapy demos · tap, drag, listen & match
-      </footer>
+      <DemoShell />
     </div>
   );
 }
