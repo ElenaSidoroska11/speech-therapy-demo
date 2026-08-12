@@ -32,7 +32,7 @@ const FOOTER: Record<Activity, string> = {
 
 export function DemoShell() {
   const [activity, setActivity] = useState<Activity>("match");
-  const [traceLetter, setTraceLetter] = useState<LetterId>("S");
+  const [traceLetter, setTraceLetter] = useState<LetterId>("wh");
 
   return (
     <>

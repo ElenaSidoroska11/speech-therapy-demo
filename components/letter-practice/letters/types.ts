@@ -1,25 +1,32 @@
-export type LetterId = "S";
+/**
+ * Practice graphemes: single letters and Victorian digraphs (ch, sh, th, wh).
+ * Add new ids here when registering a definition in `./index.ts`.
+ *
+ * Note: not every id is active — see which entries are registered in `index.ts`.
+ */
+export type LetterId = "S" | "ch" | "sh" | "th" | "wh";
 
 export type LetterDefinition = {
   id: LetterId;
-  /** Display glyph */
+  /** Display glyph / grapheme */
   letter: string;
-  /** Friendly name spoken by TTS, e.g. "the letter S" */
+  /** Friendly name spoken by TTS, e.g. "the letter S" or "the digraph wh" */
   spokenName: string;
   /** Transcripts that count as a correct pronunciation */
   acceptTranscripts: string[];
   /** SVG viewBox */
   viewBox: string;
   /**
-   * Single continuous stroke path for draw-in animation and tracing.
-   * Prefer paths that follow how the letter is typically handwritten.
+   * One SVG path `d` per letter/shape to practice.
+   * Single letters: one entry. Digraphs like “wh”: one path for “w”, one for “h”.
+   * Trace progress and success are tracked independently per path.
    */
-  strokePath: string;
+  strokePaths: string[];
   /** Stroke width relative to the viewBox */
   strokeWidth: number;
   /** How close (in SVG units) a pointer must be to count as on-path */
   traceTolerance: number;
-  /** Fraction of path samples that must be covered to succeed (0–1) */
+  /** Fraction of samples that must be covered on *each* path to succeed (0–1) */
   traceCoverage: number;
 };
 

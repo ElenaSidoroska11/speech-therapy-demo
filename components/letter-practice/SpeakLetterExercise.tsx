@@ -49,7 +49,7 @@ function createRound(letterId: LetterId): RoundState {
 
 export function SpeakLetterExercise({
   onContinueToTrace,
-  initialLetter = "S",
+  initialLetter = "wh",
 }: SpeakLetterExerciseProps) {
   const [round, setRound] = useState<RoundState>(() => createRound(initialLetter));
   const letter = getLetter(round.letterId);
@@ -73,6 +73,8 @@ export function SpeakLetterExercise({
   const { status, lastHeard, startListening, stopListening } =
     useSpeechRecognition({
       acceptTranscripts: letter.acceptTranscripts,
+      // Victorian AU classrooms — closer match for local pronunciation
+      lang: "en-AU",
       onMatch: () => {
         handleSuccess();
       },
@@ -81,7 +83,7 @@ export function SpeakLetterExercise({
           if (prev.succeeded) return prev;
           return {
             ...prev,
-            feedback: "Almost — try saying the letter again!",
+            feedback: "Almost — try saying it again!",
             feedbackTone: "hint",
           };
         });
@@ -113,14 +115,14 @@ export function SpeakLetterExercise({
 
       <header className="text-center">
         <p className="font-(family-name:--font-display) text-sm font-semibold uppercase tracking-wide text-teal-800/70">
-          Speak the letter
+          Speak the sound
         </p>
         <h1 className="mt-1 font-(family-name:--font-display) text-3xl font-bold text-teal-950 sm:text-4xl">
           Say “{letter.letter}”
         </h1>
         <p className="mt-2 max-w-md text-base font-semibold text-teal-900/70 sm:text-lg">
-          Press the microphone and pronounce the letter sound. Watch it draw
-          itself when you get it right!
+          Press the microphone and pronounce the sound. Watch it draw itself
+          when you get it right!
         </p>
       </header>
 
@@ -137,18 +139,26 @@ export function SpeakLetterExercise({
                   : "bg-white/70 text-teal-800 ring-white/50 hover:bg-white"
               }`}
             >
-              {id}
+              {getLetter(id).letter}
             </button>
           ))}
         </div>
       )}
 
-      <div className="relative flex h-56 w-full max-w-xs items-center justify-center sm:h-72 sm:max-w-sm">
+      <div
+        className={`relative flex h-56 w-full items-center justify-center sm:h-72 ${
+          letter.letter.length > 1 ? "max-w-md sm:max-w-lg" : "max-w-xs sm:max-w-sm"
+        }`}
+      >
         <div className="absolute inset-0 rounded-4xl bg-white/55 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm" />
-        <div className="relative h-[85%] w-[70%]">
+        <div
+          className={`relative h-[85%] ${
+            letter.letter.length > 1 ? "w-[88%]" : "w-[70%]"
+          }`}
+        >
           <LetterStroke letter={letter} progress={round.drawProgress} showGuide />
         </div>
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {round.succeeded && (
             <motion.div
               initial={{ opacity: 0, scale: 0.6 }}
@@ -159,7 +169,7 @@ export function SpeakLetterExercise({
               ⭐
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </div>
 
       <FeedbackBanner message={round.feedback} tone={round.feedbackTone} />
@@ -230,7 +240,7 @@ export function SpeakLetterExercise({
               onClick={() => onContinueToTrace(round.letterId)}
               className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-5 py-3 text-sm font-extrabold text-white shadow-[0_6px_0_#0F766E]"
             >
-              Trace the letter
+              Trace it
               <ArrowRight className="h-4 w-4" />
             </motion.button>
           )}
@@ -243,7 +253,7 @@ export function SpeakLetterExercise({
               onClick={() => selectLetter(nextLetter)}
               className="inline-flex items-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-extrabold text-white shadow-[0_6px_0_#0284C7]"
             >
-              Next letter
+              Next: {getLetter(nextLetter).letter}
               <ArrowRight className="h-4 w-4" />
             </motion.button>
           )}

@@ -33,20 +33,67 @@ export function samplePathPoints(
   return points;
 }
 
+/**
+ * Build a stroke that only covers samples the kid has touched.
+ * (Unlike dashoffset fill, this does not light up the start of the path.)
+ */
+export function coveredSegmentsPath(
+  samples: Point[],
+  covered: boolean[],
+): string {
+  if (!samples.length) return "";
+  const parts: string[] = [];
+  let run: Point[] = [];
+
+  const flush = () => {
+    if (run.length === 0) return;
+    if (run.length === 1) {
+      // Tiny dab so a single covered sample still shows
+      const p = run[0];
+      parts.push(
+        `M ${p.x.toFixed(1)} ${p.y.toFixed(1)} l 0.01 0`,
+      );
+    } else {
+      parts.push(
+        run
+          .map(
+            (p, i) =>
+              `${i === 0 ? "M" : "L"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`,
+          )
+          .join(" "),
+      );
+    }
+    run = [];
+  };
+
+  for (let i = 0; i < samples.length; i++) {
+    if (covered[i]) {
+      run.push(samples[i]);
+    } else {
+      flush();
+    }
+  }
+  flush();
+  return parts.join(" ");
+}
+
 export type UseLetterTraceOptions = {
-  pathRef: RefObject<SVGPathElement | null>;
+  /** Measure path elements — one per letter.strokePaths entry */
+  pathRefs: RefObject<(SVGPathElement | null)[]>;
   svgRef: RefObject<SVGSVGElement | null>;
+  pathCount: number;
   tolerance: number;
   coverageThreshold: number;
-  /** Change when the letter path changes so samples are rebuilt */
+  /** Change when the letter paths change so samples are rebuilt */
   pathKey?: string;
   enabled?: boolean;
   onComplete?: () => void;
 };
 
 export function useLetterTrace({
-  pathRef,
+  pathRefs,
   svgRef,
+  pathCount,
   tolerance,
   coverageThreshold,
   pathKey,
@@ -55,13 +102,20 @@ export function useLetterTrace({
 }: UseLetterTraceOptions) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [strokePoints, setStrokePoints] = useState<Point[]>([]);
-  const [covered, setCovered] = useState<boolean[]>([]);
+  const [pathProgress, setPathProgress] = useState<number[]>(() =>
+    Array.from({ length: pathCount }, () => 0),
+  );
+  /** Visible teal fill paths — only the parts actually traced */
+  const [coveragePaths, setCoveragePaths] = useState<string[]>(() =>
+    Array.from({ length: pathCount }, () => ""),
+  );
   const [progress, setProgress] = useState(0);
   const [complete, setComplete] = useState(false);
   const [offPath, setOffPath] = useState(false);
 
-  const coveredRef = useRef<boolean[]>([]);
-  const samplesRef = useRef<Point[]>([]);
+  /** covered[pathIndex][sampleIndex] */
+  const coveredRef = useRef<boolean[][]>([]);
+  const samplesRef = useRef<Point[][]>([]);
   const drawingRef = useRef(false);
   const completeRef = useRef(false);
   const onCompleteRef = useRef(onComplete);
@@ -70,21 +124,54 @@ export function useLetterTrace({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
+  const publishCoverage = useCallback((covered: boolean[][]) => {
+    const samples = samplesRef.current;
+    const ratios = covered.map((row, p) =>
+      row.length === 0 ? 0 : row.filter(Boolean).length / row.length,
+    );
+    setPathProgress(ratios);
+    setCoveragePaths(
+      samples.map((pts, p) => coveredSegmentsPath(pts, covered[p] ?? [])),
+    );
+    const overall =
+      ratios.length === 0
+        ? 0
+        : ratios.reduce((sum, r) => sum + r, 0) / ratios.length;
+    setProgress(overall);
+    return ratios;
+  }, []);
+
   const rebuildSamples = useCallback(() => {
-    const path = pathRef.current;
-    if (!path) return;
-    const samples = samplePathPoints(path, 72);
+    const els = pathRefs.current;
+    if (!els) return;
+
+    const samples: Point[][] = [];
+    const covered: boolean[][] = [];
+
+    for (let i = 0; i < pathCount; i++) {
+      const path = els[i];
+      if (!path) {
+        samples.push([]);
+        covered.push([]);
+        continue;
+      }
+      const pts = samplePathPoints(path, 72);
+      samples.push(pts);
+      covered.push(pts.map(() => false));
+    }
+
     samplesRef.current = samples;
-    coveredRef.current = samples.map(() => false);
+    coveredRef.current = covered;
     completeRef.current = false;
-    setCovered(coveredRef.current);
+    setPathProgress(samples.map(() => 0));
+    setCoveragePaths(samples.map(() => ""));
     setProgress(0);
     setComplete(false);
     setStrokePoints([]);
     setOffPath(false);
     setIsDrawing(false);
     drawingRef.current = false;
-  }, [pathRef]);
+  }, [pathRefs, pathCount]);
 
   useEffect(() => {
     const id = window.requestAnimationFrame(() => rebuildSamples());
@@ -108,44 +195,52 @@ export function useLetterTrace({
 
   const markCoverage = useCallback(
     (point: Point) => {
-      const samples = samplesRef.current;
-      if (!samples.length) return;
+      const allSamples = samplesRef.current;
+      if (!allSamples.length) return;
 
-      let nearest = -1;
+      // Nearest sample across all letters/paths
+      let bestPath = -1;
+      let bestSample = -1;
       let nearestDist = Infinity;
-      for (let i = 0; i < samples.length; i++) {
-        const d = distance(point, samples[i]);
-        if (d < nearestDist) {
-          nearestDist = d;
-          nearest = i;
+
+      for (let p = 0; p < allSamples.length; p++) {
+        const samples = allSamples[p];
+        for (let i = 0; i < samples.length; i++) {
+          const d = distance(point, samples[i]);
+          if (d < nearestDist) {
+            nearestDist = d;
+            bestPath = p;
+            bestSample = i;
+          }
         }
       }
 
-      if (nearest < 0 || nearestDist > tolerance) {
+      if (bestPath < 0 || bestSample < 0 || nearestDist > tolerance) {
         setOffPath(true);
         return;
       }
 
       setOffPath(false);
-      const next = [...coveredRef.current];
-      const radius = 2;
-      for (
-        let i = Math.max(0, nearest - radius);
-        i <= Math.min(samples.length - 1, nearest + radius);
-        i++
-      ) {
-        if (distance(point, samples[i]) <= tolerance) {
-          next[i] = true;
+
+      const pathSamples = allSamples[bestPath];
+      const nextPathCovered = [...coveredRef.current[bestPath]];
+      // Only mark samples truly near the pointer (no remote jumps along the path)
+      for (let i = 0; i < pathSamples.length; i++) {
+        if (distance(point, pathSamples[i]) <= tolerance) {
+          nextPathCovered[i] = true;
         }
       }
-      coveredRef.current = next;
-      setCovered(next);
 
-      const hit = next.filter(Boolean).length;
-      const ratio = hit / next.length;
-      setProgress(ratio);
+      const nextAll = coveredRef.current.map((row, idx) =>
+        idx === bestPath ? nextPathCovered : row,
+      );
+      coveredRef.current = nextAll;
 
-      if (!completeRef.current && ratio >= coverageThreshold) {
+      const ratios = publishCoverage(nextAll);
+      const allDone =
+        ratios.length > 0 && ratios.every((r) => r >= coverageThreshold);
+
+      if (!completeRef.current && allDone) {
         completeRef.current = true;
         setComplete(true);
         drawingRef.current = false;
@@ -153,7 +248,7 @@ export function useLetterTrace({
         onCompleteRef.current?.();
       }
     },
-    [tolerance, coverageThreshold],
+    [tolerance, coverageThreshold, publishCoverage],
   );
 
   const onPointerDown = useCallback(
@@ -208,9 +303,10 @@ export function useLetterTrace({
   return {
     isDrawing,
     progress,
+    pathProgress,
+    coveragePaths,
     complete,
     offPath,
-    covered,
     strokePathD,
     onPointerDown,
     onPointerMove,

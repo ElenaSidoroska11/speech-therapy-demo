@@ -18,8 +18,9 @@ export const letterS: LetterDefinition = {
     "ss",
   ],
   viewBox: "0 0 200 280",
-  strokePath:
+  strokePaths: [
     "M 148 62 C 148 38 128 28 100 28 C 72 28 48 44 48 70 C 48 92 62 104 88 116 L 112 128 C 138 140 152 156 152 182 C 152 212 130 248 100 248 C 70 248 48 228 48 204",
+  ],
   strokeWidth: 28,
   traceTolerance: 36,
   traceCoverage: 0.95,

@@ -47,6 +47,45 @@ function normalizeTranscript(raw: string): string {
     .trim();
 }
 
+/**
+ * Match speech to practice targets.
+ * Prefer exact / whole-word hits so single letters (e.g. "s") do not
+ * false-match digraphs (e.g. "sh"), while still accepting example words
+ * that start with a digraph ("what" → "wh").
+ */
+function transcriptMatches(normalized: string, acceptedList: string[]): boolean {
+  if (!normalized) return false;
+
+  return acceptedList.some((raw) => {
+    const target = normalizeTranscript(raw);
+    if (!target) return false;
+    if (normalized === target) return true;
+
+    const words = normalized.split(" ");
+    if (words.includes(target)) return true;
+
+    // Multi-word accepted phrase ("the letter s")
+    if (target.includes(" ") && normalized.includes(target)) return true;
+
+    // Digraph / grapheme: allow common example words ("chair", "ship", "the", "what")
+    if (target.length >= 2 && words.some((w) => w.startsWith(target))) {
+      return true;
+    }
+
+    // Held single phoneme: "sss", "shhhh" when target is "s" / "sh"
+    if (
+      target.length <= 2 &&
+      normalized.length > target.length &&
+      normalized.startsWith(target) &&
+      [...normalized].every((ch) => target.includes(ch))
+    ) {
+      return true;
+    }
+
+    return false;
+  });
+}
+
 function isSpeechSupported() {
   return getSpeechRecognitionCtor() !== null;
 }
@@ -121,14 +160,7 @@ export function useSpeechRecognition({
       if (!normalized) return;
       setLastHeard(normalized);
 
-      const matched = acceptRef.current.some((accepted) => {
-        const target = normalizeTranscript(accepted);
-        return (
-          normalized === target ||
-          normalized.includes(target) ||
-          target.includes(normalized)
-        );
-      });
+      const matched = transcriptMatches(normalized, acceptRef.current);
 
       const lastResult = event.results[event.results.length - 1];
       if (matched) {

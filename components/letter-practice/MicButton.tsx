@@ -52,7 +52,7 @@ export function MicButton({
             ? "Speech recognition not supported"
             : listening
               ? "Listening — tap to stop"
-              : "Press to speak the letter"
+              : "Press to speak the sound"
         }
         className={`relative z-10 flex h-24 w-24 items-center justify-center rounded-full text-white shadow-lg transition sm:h-28 sm:w-28 ${
           unsupported
@@ -73,8 +73,8 @@ export function MicButton({
         {unsupported
           ? "Mic not available in this browser"
           : listening
-            ? "Listening… say the letter!"
-            : "Tap the mic and say the letter"}
+            ? "Listening… say the sound!"
+            : "Tap the mic and say the sound"}
       </p>
     </div>
   );

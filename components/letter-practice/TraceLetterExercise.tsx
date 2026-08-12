@@ -24,7 +24,7 @@ type TraceLetterExerciseProps = {
 };
 
 export function TraceLetterExercise({
-  initialLetter = "S",
+  initialLetter = "wh",
   onNextLetter,
 }: TraceLetterExerciseProps) {
   const [letterId, setLetterId] = useState<LetterId>(initialLetter);
@@ -32,7 +32,7 @@ export function TraceLetterExercise({
   const [celebrate, setCelebrate] = useState(false);
   const letter = getLetter(letterId);
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const pathRef = useRef<SVGPathElement | null>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
 
   const handleComplete = useCallback(() => {
     setCelebrate(true);
@@ -42,6 +42,7 @@ export function TraceLetterExercise({
 
   const {
     progress,
+    coveragePaths,
     complete,
     offPath,
     strokePathD,
@@ -51,11 +52,12 @@ export function TraceLetterExercise({
     onPointerCancel,
     reset,
   } = useLetterTrace({
-    pathRef,
+    pathRefs,
     svgRef,
+    pathCount: letter.strokePaths.length,
     tolerance: letter.traceTolerance,
     coverageThreshold: letter.traceCoverage,
-    pathKey: `${letter.strokePath}-${session}`,
+    pathKey: `${letter.strokePaths.join("|")}-${session}`,
     enabled: true,
     onComplete: handleComplete,
   });
@@ -64,7 +66,9 @@ export function TraceLetterExercise({
     ? "Great job!"
     : offPath
       ? "Stay on the path — you’ve got this!"
-      : "Trace along the letter path";
+      : letter.strokePaths.length > 1
+        ? "Trace both letters — w then h"
+        : "Trace along the letter path";
   const feedbackTone = complete ? "success" : "hint";
 
   const clearTrace = () => {
@@ -88,13 +92,13 @@ export function TraceLetterExercise({
 
       <header className="text-center">
         <p className="font-(family-name:--font-display) text-sm font-semibold uppercase tracking-wide text-teal-800/70">
-          Trace the letter
+          Trace the sound
         </p>
         <h1 className="mt-1 font-(family-name:--font-display) text-3xl font-bold text-teal-950 sm:text-4xl">
           Trace “{letter.letter}”
         </h1>
         <p className="mt-2 max-w-md text-base font-semibold text-teal-900/70 sm:text-lg">
-          Use your finger, stylus, or mouse to follow the letter path.
+          Use your finger, stylus, or mouse to follow the path.
         </p>
       </header>
 
@@ -111,22 +115,30 @@ export function TraceLetterExercise({
                   : "bg-white/70 text-teal-800 ring-white/50 hover:bg-white"
               }`}
             >
-              {id}
+              {getLetter(id).letter}
             </button>
           ))}
         </div>
       )}
 
-      <div className="relative w-full max-w-md">
+      <div
+        className={`relative flex h-56 w-full items-center justify-center sm:h-72 ${
+          letter.letter.length > 1 ? "max-w-md sm:max-w-lg" : "max-w-xs sm:max-w-sm"
+        }`}
+      >
         <div className="absolute inset-0 rounded-4xl bg-white/55 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm" />
-        <div className="relative aspect-5/7 w-full p-4 sm:p-6">
+        <div
+          className={`relative h-[85%] ${
+            letter.letter.length > 1 ? "w-[88%]" : "w-[70%]"
+          }`}
+        >
           <LetterStroke
             letter={letter}
-            progress={progress}
+            coveragePaths={coveragePaths}
             showGuide
             animateProgress={false}
             svgRef={svgRef}
-            pathRef={pathRef}
+            pathRefs={pathRefs}
             interactive={!complete}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -192,7 +204,7 @@ export function TraceLetterExercise({
             }}
             className="inline-flex items-center gap-2 rounded-2xl bg-teal-600 px-5 py-3 text-sm font-extrabold text-white shadow-[0_6px_0_#0F766E]"
           >
-            Next letter
+            Next: {getLetter(nextLetter).letter}
             <ArrowRight className="h-4 w-4" />
           </motion.button>
         )}

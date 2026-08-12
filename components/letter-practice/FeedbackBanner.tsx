@@ -7,19 +7,13 @@ type FeedbackBannerProps = {
   tone?: "success" | "hint" | "error";
 };
 
-const TONE_STYLES: Record<
-  NonNullable<FeedbackBannerProps["tone"]>,
-  string
-> = {
+const TONE_STYLES: Record<NonNullable<FeedbackBannerProps["tone"]>, string> = {
   success: "bg-emerald-500 text-white shadow-[0_6px_0_#047857]",
-  hint: "bg-amber-300 text-amber-950 shadow-[0_6px_0_#D97706]",
+  hint: "bg-blue-100 text-blue-950 shadow-[0_6px_0_#93C5FD]",
   error: "bg-rose-400 text-white shadow-[0_6px_0_#E11D48]",
 };
 
-export function FeedbackBanner({
-  message,
-  tone = "success",
-}: FeedbackBannerProps) {
+export function FeedbackBanner({ message, tone = "success" }: FeedbackBannerProps) {
   return (
     <div className="flex min-h-14 items-center justify-center">
       <AnimatePresence mode="wait">
@@ -31,8 +25,7 @@ export function FeedbackBanner({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 380, damping: 24 }}
-            className={`rounded-2xl px-5 py-3 text-center text-lg font-extrabold sm:text-xl ${TONE_STYLES[tone]}`}
-          >
+            className={`rounded-2xl px-5 py-3 text-center text-lg font-extrabold sm:text-xl ${TONE_STYLES[tone]}`}>
             {message}
           </motion.p>
         ) : null}
