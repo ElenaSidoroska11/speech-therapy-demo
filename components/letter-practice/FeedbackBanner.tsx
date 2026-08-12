@@ -8,9 +8,9 @@ type FeedbackBannerProps = {
 };
 
 const TONE_STYLES: Record<NonNullable<FeedbackBannerProps["tone"]>, string> = {
-  success: "bg-emerald-500 text-white shadow-[0_6px_0_#047857]",
-  hint: "bg-blue-100 text-blue-950 shadow-[0_6px_0_#93C5FD]",
-  error: "bg-rose-400 text-white shadow-[0_6px_0_#E11D48]",
+  success: "text-teal-950",
+  hint: "text-teal-950",
+  error: "text-rose-900",
 };
 
 export function FeedbackBanner({ message, tone = "success" }: FeedbackBannerProps) {
@@ -25,7 +25,8 @@ export function FeedbackBanner({ message, tone = "success" }: FeedbackBannerProp
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 380, damping: 24 }}
-            className={`rounded-2xl px-5 py-3 text-center text-lg font-extrabold sm:text-xl ${TONE_STYLES[tone]}`}>
+            className={`text-center text-2xl font-black sm:text-3xl tracking-tight ${TONE_STYLES[tone]}`}
+            style={{ fontFamily: "'Baloo 2', 'Nunito', system-ui, sans-serif" }}>
             {message}
           </motion.p>
         ) : null}

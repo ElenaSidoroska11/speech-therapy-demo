@@ -67,7 +67,7 @@ export function TraceLetterExercise({
     : offPath
       ? "Stay on the path — you’ve got this!"
       : letter.strokePaths.length > 1
-        ? "Trace both letters — w then h"
+        ? `Trace “${letter.letter}” along each path, start to finish`
         : "Trace along the letter path";
   const feedbackTone = complete ? "success" : "hint";
 
@@ -215,7 +215,7 @@ export function TraceLetterExercise({
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             onClick={clearTrace}
-            className="inline-flex items-center gap-2 rounded-2xl bg-sky-500 px-5 py-3 text-sm font-extrabold text-white shadow-[0_6px_0_#0284C7]"
+            className="inline-flex items-center gap-2 rounded-2xl bg-teal-600  px-5 py-3 text-sm font-extrabold text-white "
           >
             Practice again
             <ArrowRight className="h-4 w-4" />
