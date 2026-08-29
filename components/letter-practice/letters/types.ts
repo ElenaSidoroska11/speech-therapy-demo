@@ -4,7 +4,12 @@
  *
  * Note: not every id is active — see which entries are registered in `index.ts`.
  */
-export type LetterId = "S" | "ch" | "sh" | "th" | "wh";
+export type LetterId = "S" | "M" | "L" | "a" | "ch" | "sh" | "th" | "wh";
+
+export type LetterCueImage = {
+  src: string;
+  alt: string;
+};
 
 export type LetterDefinition = {
   id: LetterId;
@@ -28,6 +33,15 @@ export type LetterDefinition = {
   traceTolerance: number;
   /** Fraction of samples that must be covered on *each* path to succeed (0–1) */
   traceCoverage: number;
+  /**
+   * Optional 0–1 positions along strokes for numbered tracing arrows
+   * (worksheet-style). Start dot is always at the first path start.
+   * One stroke: each value is an arrow on that path.
+   * Several strokes: `fractions[i]` is the arrow on stroke i.
+   */
+  directionArrowFractions?: number[];
+  /** Animal (or object) pictures that look like this letter */
+  cueImages?: LetterCueImage[];
 };
 
 export type LetterStep = "speak" | "trace";

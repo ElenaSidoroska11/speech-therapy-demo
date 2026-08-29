@@ -12,10 +12,13 @@ export const letterS: LetterDefinition = {
     "s",
     "es",
     "ess",
-    // "letter s",
-    // "the letter s",
+    "letter s",
+    "the letter s",
     "sss",
     "ss",
+    "s s",
+    "es es",
+    "ess ess",
   ],
   viewBox: "0 0 200 280",
   strokePaths: [
@@ -23,5 +26,8 @@ export const letterS: LetterDefinition = {
   ],
   strokeWidth: 28,
   traceTolerance: 36,
-  traceCoverage: 0.95,
+  traceCoverage: 0.99,
+  // Start at top-right, then a second arrow on the lower-right curve
+  directionArrowFractions: [0.08, 0.66],
+  cueImages: [{ src: "/S-snake.png", alt: "A snake that looks like the letter S" }],
 };

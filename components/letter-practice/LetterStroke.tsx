@@ -9,6 +9,11 @@ import {
   type RefObject,
 } from "react";
 import { motion } from "framer-motion";
+import {
+  buildDirectionGuides,
+  DirectionGuideLayer,
+  type DirectionGuide,
+} from "./DirectionGuides";
 import type { LetterDefinition } from "./letters/types";
 
 type LetterStrokeProps = {
@@ -20,12 +25,14 @@ type LetterStrokeProps = {
    */
   progress?: number;
   /**
-   * Per-path teal fill built only from samples the kid touched.
+   * Per-path fill built only from samples the kid touched.
    * Prefer this over sequential dashoffset for tracing.
    */
   coveragePaths?: string[];
   /** Soft ghost outline so kids see the target shape */
   showGuide?: boolean;
+  /** Start dot + numbered arrows along the stroke (tracing worksheet style) */
+  showDirectionGuides?: boolean;
   /** Smooth dashoffset transition (great for speak success; off for live tracing) */
   animateProgress?: boolean;
   className?: string;
@@ -39,7 +46,21 @@ type LetterStrokeProps = {
   onPointerUp?: PointerEventHandler<SVGSVGElement>;
   onPointerCancel?: PointerEventHandler<SVGSVGElement>;
   interactive?: boolean;
+  /** Fires once path lengths are measured so a draw animation can start from empty. */
+  onMeasured?: () => void;
+  /** Draw letter-shaped cue pictures on the same handwriting lines as the letter */
+  showCueImages?: boolean;
 };
+
+type RulingLines = { top: number; bottom: number };
+
+function parseViewBox(viewBox: string) {
+  const [x = 0, y = 0, width = 100, height = 100] = viewBox
+    .trim()
+    .split(/[\s,]+/)
+    .map(Number);
+  return { x, y, width, height };
+}
 
 /** Map a single 0–1 progress across N paths in sequence (speak animation). */
 function progressForPath(overall: number, index: number, pathCount: number) {
@@ -49,11 +70,19 @@ function progressForPath(overall: number, index: number, pathCount: number) {
   return Math.min(1, Math.max(0, local));
 }
 
+/** Seconds to draw one stroke in the demo / speak fill animation. */
+function strokeDrawDurationSec(pathCount: number) {
+  // Single letters keep the slower full-path draw; multi-stroke letters
+  // draw one stem at a time so kids see handwriting order.
+  return pathCount <= 1 ? 3.5 : 1.05;
+}
+
 export function LetterStroke({
   letter,
   progress = 0,
   coveragePaths,
   showGuide = true,
+  showDirectionGuides = false,
   animateProgress = true,
   className = "",
   pathRefs,
@@ -64,6 +93,8 @@ export function LetterStroke({
   onPointerUp,
   onPointerCancel,
   interactive = false,
+  onMeasured,
+  showCueImages = false,
 }: LetterStrokeProps) {
   const paths = letter.strokePaths;
   const localFillRefs = useRef<(SVGPathElement | null)[]>([]);
@@ -72,9 +103,24 @@ export function LetterStroke({
   );
   /** Which letter the current pathLengths were measured for (avoids stale lengths). */
   const [measuredForId, setMeasuredForId] = useState<string | null>(null);
+  /** Handwriting-paper top and baseline guides */
+  const [rulingLines, setRulingLines] = useState<RulingLines | null>(null);
+  const [directionGuides, setDirectionGuides] = useState<DirectionGuide[]>([]);
+  const letterBox = parseViewBox(letter.viewBox);
+  const cueImages = showCueImages ? letter.cueImages ?? [] : [];
+  const cueSlotWidth = cueImages.length > 0 ? letterBox.height * 0.9 : 0;
+  const cueGap = cueImages.length > 0 ? Math.max(12, letterBox.width * 0.06) : 0;
+  const extraLeft =
+    cueImages.length > 0 ? cueSlotWidth * cueImages.length + cueGap : 0;
+  const viewBox = {
+    x: letterBox.x - extraLeft,
+    y: letterBox.y,
+    width: letterBox.width + extraLeft,
+    height: letterBox.height,
+  };
   const useCoverageFill = coveragePaths != null;
   // Lengths start unmeasured and are read after paint. Until ready, keep the
-  // teal fill hidden so the stroke cannot "draw itself" on page open.
+  // fill hidden so the stroke cannot "draw itself" on page open.
   const lengthsReady =
     measuredForId === letter.id &&
     pathLengths.length === paths.length &&
@@ -82,22 +128,60 @@ export function LetterStroke({
   // Only ease dashoffset when progress moves (speak success), never when
   // measured path length first lands (that would look like auto-draw).
   const shouldAnimateProgress = animateProgress && lengthsReady && progress > 0;
+  const onMeasuredRef = useRef(onMeasured);
+  onMeasuredRef.current = onMeasured;
 
   useEffect(() => {
     localFillRefs.current = localFillRefs.current.slice(0, paths.length);
     setMeasuredForId(null);
     setPathLengths(paths.map(() => 0));
+    setRulingLines(null);
+    setDirectionGuides([]);
     const id = window.requestAnimationFrame(() => {
-      setPathLengths(
-        paths.map((_, i) => {
-          const el = localFillRefs.current[i];
-          return el ? el.getTotalLength() : 0;
-        }),
+      let top = Infinity;
+      let bottom = -Infinity;
+
+      const halfStroke = letter.strokeWidth / 2;
+
+      const lengths = paths.map((_, i) => {
+        const el = localFillRefs.current[i];
+        if (!el) return 0;
+        const box = el.getBBox();
+        // getBBox() is the path centerline — include half the stroke so lines
+        // sit where the visible letter actually starts and ends.
+        top = Math.min(top, box.y - halfStroke);
+        bottom = Math.max(bottom, box.y + box.height + halfStroke);
+        return el.getTotalLength();
+      });
+
+      setPathLengths(lengths);
+      setRulingLines(
+        top !== Infinity ? { top, bottom } : null,
+      );
+      setDirectionGuides(
+        showDirectionGuides
+          ? buildDirectionGuides(
+              localFillRefs.current,
+              lengths,
+              letter.directionArrowFractions ?? [],
+            )
+          : [],
       );
       setMeasuredForId(letter.id);
     });
     return () => window.cancelAnimationFrame(id);
-  }, [paths, letter.id]);
+  }, [
+    paths,
+    letter.id,
+    letter.strokeWidth,
+    letter.directionArrowFractions,
+    showDirectionGuides,
+  ]);
+
+  useEffect(() => {
+    if (!lengthsReady) return;
+    onMeasuredRef.current?.();
+  }, [lengthsReady]);
 
   return (
     <motion.div
@@ -108,7 +192,7 @@ export function LetterStroke({
     >
       <svg
         ref={svgRef}
-        viewBox={letter.viewBox}
+        viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
         className="h-full w-full touch-none select-none"
         role="img"
         aria-label={`Practice shape ${letter.letter}`}
@@ -118,6 +202,42 @@ export function LetterStroke({
         onPointerCancel={onPointerCancel}
         style={{ cursor: interactive ? "crosshair" : "default" }}
       >
+        {showGuide &&
+          rulingLines &&
+          (["top", "bottom"] as const).map((edge) => (
+            <line
+              key={`ruling-${edge}`}
+              x1={viewBox.x}
+              y1={rulingLines[edge]}
+              x2={viewBox.x + viewBox.width}
+              y2={rulingLines[edge]}
+              stroke="rgba(15, 61, 54, 0.22)"
+              strokeWidth={1.5}
+              strokeDasharray="3 7"
+              strokeLinecap="round"
+              pointerEvents="none"
+            />
+          ))}
+
+        {showGuide &&
+          rulingLines &&
+          cueImages.map((img, i) => {
+            const height = rulingLines.bottom - rulingLines.top;
+            return (
+              <image
+                key={`cue-${img.src}`}
+                href={img.src}
+                x={viewBox.x + i * cueSlotWidth}
+                y={rulingLines.top}
+                width={cueSlotWidth}
+                height={height}
+                preserveAspectRatio="xMidYMid meet"
+                pointerEvents="none"
+                aria-label={img.alt}
+              />
+            );
+          })}
+
         {showGuide &&
           paths.map((d, i) => (
             <path
@@ -131,7 +251,21 @@ export function LetterStroke({
             />
           ))}
 
-        {/* Measure paths (always mounted) — also speak fill when not tracing */}
+        {showDirectionGuides &&
+          paths.map((d, i) => (
+            <path
+              key={`centerline-${i}`}
+              d={d}
+              fill="none"
+              stroke="rgba(15, 61, 54, 0.38)"
+              strokeWidth={2.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              pointerEvents="none"
+            />
+          ))}
+
+        {/* Measure paths (always mounted) — also speak/demo fill when not tracing */}
         {paths.map((d, i) => {
           const fill = progressForPath(progress, i, paths.length);
           const clamped = Math.min(1, Math.max(0, fill));
@@ -139,6 +273,10 @@ export function LetterStroke({
           const measured = length > 0;
           // Fully hidden until measured; then hide by dashoffset when progress is 0
           const dashOffset = measured ? length * (1 - clamped) : 0;
+          const drawSec = strokeDrawDurationSec(paths.length);
+          // Stagger multi-stroke letters so stems draw in writing order, not together
+          const drawDelaySec =
+            shouldAnimateProgress && paths.length > 1 ? i * drawSec : 0;
 
           return (
             <path
@@ -150,7 +288,7 @@ export function LetterStroke({
               d={d}
               fill="none"
               stroke={
-                useCoverageFill || !measured ? "transparent" : "#0D9488"
+                useCoverageFill || !measured ? "transparent" : "#FDA702"
               }
               strokeWidth={letter.strokeWidth}
               strokeLinecap="round"
@@ -164,7 +302,7 @@ export function LetterStroke({
                   ? undefined
                   : {
                       transition: shouldAnimateProgress
-                        ? "stroke-dashoffset 3.5s cubic-bezier(0.4, 0, 0.2, 1)"
+                        ? `stroke-dashoffset ${drawSec}s cubic-bezier(0.4, 0, 0.2, 1) ${drawDelaySec}s`
                         : "none",
                     }
               }
@@ -181,7 +319,7 @@ export function LetterStroke({
                 key={`covered-${i}`}
                 d={d}
                 fill="none"
-                stroke="#0D9488"
+                stroke="#FDA702"
                 strokeWidth={letter.strokeWidth}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -191,6 +329,13 @@ export function LetterStroke({
           )}
 
         {children}
+
+        {showDirectionGuides && directionGuides.length > 0 && (
+          <DirectionGuideLayer
+            guides={directionGuides}
+            strokeWidth={letter.strokeWidth}
+          />
+        )}
       </svg>
     </motion.div>
   );
