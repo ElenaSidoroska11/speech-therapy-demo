@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { Home, Menu, X } from "lucide-react";
@@ -158,12 +158,14 @@ export function BrandSidebar({
   onSelect,
   onHome,
   className = "",
+  footer,
 }: {
   items: ActivityNavItem[];
   activeId: string | null;
   onSelect: (id: string) => void;
   onHome: () => void;
   className?: string;
+  footer?: ReactNode;
 }) {
   return (
     <div
@@ -172,14 +174,17 @@ export function BrandSidebar({
         priority
         className="mb-3 h-auto w-56 -translate-y-4 object-contain md:w-64 md:-translate-y-6"
       />
-      <ActivityDesktopNav
-        items={items}
-        activeId={activeId}
-        onSelect={onSelect}
-        onHome={onHome}
-        size="lg"
-        className="mt-4 flex w-max flex-col gap-5"
-      />
+      <div className="mt-4 flex w-max flex-col gap-5">
+        <ActivityDesktopNav
+          items={items}
+          activeId={activeId}
+          onSelect={onSelect}
+          onHome={onHome}
+          size="lg"
+          className="flex w-full flex-col gap-5"
+        />
+        {footer}
+      </div>
     </div>
   );
 }

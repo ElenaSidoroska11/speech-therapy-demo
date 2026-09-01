@@ -14,6 +14,19 @@ type ArrowGuide = {
 
 export type DirectionGuide = StartGuide | ArrowGuide;
 
+/** Pull the start dot slightly before the stroke so it reads like a worksheet pencil mark. */
+function startDotPoint(el: SVGPathElement, length: number) {
+  const start = el.getPointAtLength(0);
+  const step = Math.min(10, Math.max(3, length * 0.015));
+  const next = el.getPointAtLength(step);
+  const angle = Math.atan2(next.y - start.y, next.x - start.x);
+  const offset = Math.min(18, Math.max(12, length * 0.04));
+  return {
+    x: start.x - Math.cos(angle) * offset,
+    y: start.y - Math.sin(angle) * offset,
+  };
+}
+
 /**
  * Worksheet-style start dots and numbered arrows along stroke paths.
  * `fractions` are 0–1 along a path.
@@ -21,6 +34,7 @@ export type DirectionGuide = StartGuide | ArrowGuide;
  * - Several paths (e.g. M): `fractions[i]` is the arrow on path i
  *   (falls back to `fractions[0]` or a default if shorter).
  * Only the first path gets a start dot — that’s where writing begins.
+ * The dot is offset slightly before the stroke so it stays visible beside arrow 1.
  */
 export function buildDirectionGuides(
   pathEls: (SVGPathElement | null)[],
@@ -48,7 +62,7 @@ export function buildDirectionGuides(
 
     // One start dot at the beginning of the letter (first stroke only)
     if (!placedStart) {
-      const start = pointAt(0);
+      const start = startDotPoint(el, length);
       guides.push({ kind: "start", x: start.x, y: start.y });
       placedStart = true;
     }

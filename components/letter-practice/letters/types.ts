@@ -4,7 +4,7 @@
  *
  * Note: not every id is active — see which entries are registered in `index.ts`.
  */
-export type LetterId = "S" | "M" | "L" | "a" | "ch" | "sh" | "th" | "wh";
+export type LetterId = "S" | "M" | "L" | "a" | "c" | "h" | "m" | "s" | "y" | "ch" | "sh" | "th" | "wh";
 
 export type LetterCueImage = {
   src: string;
@@ -21,6 +21,11 @@ export type LetterDefinition = {
   acceptTranscripts: string[];
   /** SVG viewBox */
   viewBox: string;
+  /**
+   * When set, the practice frame matches this width÷height so the letter
+   * can scale to fill the card without changing stroke coordinates.
+   */
+  fitAspectRatio?: number;
   /**
    * One SVG path `d` per letter/shape to practice.
    * Single letters: one entry. Digraphs like “wh”: one path for “w”, one for “h”.

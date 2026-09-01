@@ -1,9 +1,14 @@
 import type { LetterDefinition } from "./types";
 // import { letterCh } from "./letterCh";
 import { letterA } from "./letterA";
-import { letterL } from "./letterL";
-import { letterM } from "./letterM";
-import { letterS } from "./letterS";
+import { letterC } from "./letterC";
+// import { letterL } from "./letterL";
+import { letterLowerH } from "./letterLowerH";
+// import { letterLowerM } from "./letterLowerM";
+import { letterLowerS } from "./letterLowerS";
+// import { letterLowerY } from "./letterLowerY";
+// import { letterM } from "./letterM";
+// import { letterS } from "./letterS";
 // import { letterSh } from "./letterSh";
 // import { letterTh } from "./letterTh";
 // import { letterWh } from "./letterWh";
@@ -13,20 +18,25 @@ import { letterS } from "./letterS";
  * To add one: create `letterX.ts`, extend `LetterId`, and register it here.
  *
  * Order drives the letter picker and “Next” navigation.
- * Currently active: cursive a, then S, M, L (wh and others commented out for later).
+ * Currently active: a, c, h, s (others commented out for later).
  */
 export const LETTERS = {
   a: letterA,
-  S: letterS,
-  M: letterM,
-  L: letterL,
+  c: letterC,
+  h: letterLowerH,
+  s: letterLowerS,
+  // m: letterLowerM,
+  // y: letterLowerY,
+  // S: letterS,
+  // M: letterM,
+  // L: letterL,
   // ch: letterCh,
   // sh: letterSh,
   // th: letterTh,
   // wh: letterWh,
 } as const satisfies Record<string, LetterDefinition>;
 
-/** Only ids present in `LETTERS` (currently `a`, `S`, `M`, and `L`). */
+/** Only ids present in `LETTERS` (currently `a`, `c`, `h`, and `s`). */
 export type ActiveLetterId = keyof typeof LETTERS;
 
 export const AVAILABLE_LETTERS = Object.keys(LETTERS) as ActiveLetterId[];

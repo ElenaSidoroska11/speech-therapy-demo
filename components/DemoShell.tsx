@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Mic } from "lucide-react";
 import { LetterPractice } from "@/components/letter-practice/LetterPractice";
+import { LetterPicker } from "@/components/letter-practice/LetterPicker";
+import type { LetterId } from "@/components/letter-practice/letters";
 import { HomeLanding, HomeScene } from "@/components/HomeLanding";
 import { ActivityNav, BrandSidebar } from "@/components/ActivityNav";
 
@@ -22,6 +24,7 @@ const PAGE_GRID =
 
 export function DemoShell() {
   const [activity, setActivity] = useState<Activity | null>(null);
+  const [letterId, setLetterId] = useState<LetterId>("a");
 
   const selectActivity = (id: string) => setActivity(id as Activity);
   const goHome = () => setActivity(null);
@@ -33,6 +36,11 @@ export function DemoShell() {
       onSelect={selectActivity}
       onHome={goHome}
       className="md:row-span-2"
+      footer={
+        activity === "letters" ? (
+          <LetterPicker variant="sidebar" letterId={letterId} onSelect={setLetterId} />
+        ) : undefined
+      }
     />
   );
 
@@ -53,7 +61,7 @@ export function DemoShell() {
             {activity === null ? (
               <HomeLanding />
             ) : activity === "letters" ? (
-              <LetterPractice />
+              <LetterPractice letterId={letterId} onLetterChange={setLetterId} />
             ) : null}
           </div>
         </div>
