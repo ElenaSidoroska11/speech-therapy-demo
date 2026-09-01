@@ -11,7 +11,7 @@ export function Sun() {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.1 }}
     >
-      <div className="relative h-32 w-32 drop-shadow-[0_0_20px_rgba(255,213,74,0.55)] sm:h-44 sm:w-44 md:h-64 md:w-64 md:drop-shadow-[0_0_28px_rgba(255,213,74,0.65)]">
+      <div className="relative h-40 w-40 drop-shadow-[0_0_20px_rgba(255,213,74,0.55)] sm:h-56 sm:w-56 md:h-80 md:w-80 md:drop-shadow-[0_0_32px_rgba(255,213,74,0.65)]">
         <motion.svg
           viewBox="0 0 120 120"
           className="absolute inset-0 h-full w-full"

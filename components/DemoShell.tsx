@@ -24,7 +24,7 @@ const PAGE_GRID =
 
 export function DemoShell() {
   const [activity, setActivity] = useState<Activity | null>(null);
-  const [letterId, setLetterId] = useState<LetterId>("a");
+  const [letterId, setLetterId] = useState<LetterId>("s");
 
   const selectActivity = (id: string) => setActivity(id as Activity);
   const goHome = () => setActivity(null);

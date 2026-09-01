@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CelebrationBurst } from "@/components/shared/CelebrationBurst";
-import { playCelebration, playSuccessChime } from "@/components/shared/sounds";
+import { playPhonemeSound } from "@/components/shared/sounds";
 import { LetterPicker } from "./LetterPicker";
 import { TraceExerciseHeader } from "./TraceExerciseHeader";
 import { TraceExerciseWorkspace } from "./TraceExerciseWorkspace";
@@ -22,7 +22,7 @@ type TraceLetterExerciseProps = {
 };
 
 export function TraceLetterExercise({
-  initialLetter = "h",
+  initialLetter = "s",
   onNextLetter,
   layout = "stacked",
 }: TraceLetterExerciseProps) {
@@ -38,8 +38,6 @@ export function TraceLetterExercise({
 
   const handleComplete = useCallback(() => {
     setCelebrate(true);
-    playSuccessChime();
-    window.setTimeout(() => playCelebration(), 280);
   }, []);
 
   useEffect(() => {
@@ -55,6 +53,9 @@ export function TraceLetterExercise({
 
   const replayDemo = () => {
     if (!demoReadyRef.current) return;
+    if (letter.phonemeSound) {
+      playPhonemeSound(letter.phonemeSound);
+    }
     window.clearTimeout(replayTimeoutRef.current);
     setDemoProgress(0);
     replayTimeoutRef.current = window.setTimeout(() => {

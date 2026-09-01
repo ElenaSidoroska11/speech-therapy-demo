@@ -17,6 +17,8 @@ export type LetterDefinition = {
   letter: string;
   /** Friendly name spoken by TTS, e.g. "the letter S" or "the digraph wh" */
   spokenName: string;
+  /** Optional phoneme clip played when the stroke demo replays (path under public/) */
+  phonemeSound?: string;
   /** Transcripts that count as a correct pronunciation */
   acceptTranscripts: string[];
   /** SVG viewBox */

@@ -55,6 +55,101 @@ export function playCelebration() {
   });
 }
 
+let yayyAudio: HTMLAudioElement | null = null;
+let yayyEndedHandler: (() => void) | null = null;
+
+export function playYayy() {
+  if (typeof window === "undefined") return;
+
+  if (yayyAudio && yayyEndedHandler) {
+    yayyAudio.removeEventListener("ended", yayyEndedHandler);
+  }
+  if (yayyAudio) {
+    yayyAudio.pause();
+    yayyAudio.currentTime = 0;
+  }
+
+  let playsLeft = 2;
+  const audio = new Audio("/yayy.mp3");
+  yayyAudio = audio;
+
+  const onEnded = () => {
+    playsLeft -= 1;
+    if (playsLeft > 0) {
+      audio.currentTime = 0;
+      void audio.play().catch(() => {});
+      return;
+    }
+    yayyEndedHandler = null;
+  };
+
+  yayyEndedHandler = onEnded;
+  audio.addEventListener("ended", onEnded);
+  void audio.play().catch(() => {});
+}
+
+let introAudio: HTMLAudioElement | null = null;
+let introCompleteHandler: (() => void) | null = null;
+
+export function playIntro(onComplete?: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+
+  if (introAudio && introCompleteHandler) {
+    introAudio.removeEventListener("ended", introCompleteHandler);
+  }
+  if (introAudio) {
+    introAudio.pause();
+    introAudio.currentTime = 0;
+  }
+
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    introCompleteHandler = null;
+    onComplete?.();
+  };
+
+  const audio = new Audio("/intro.wav");
+  introAudio = audio;
+  introCompleteHandler = finish;
+  audio.addEventListener("ended", finish, { once: true });
+  void audio.play().catch(() => {});
+
+  return () => {
+    finished = true;
+    audio.removeEventListener("ended", finish);
+    if (introCompleteHandler === finish) {
+      introCompleteHandler = null;
+    }
+    audio.pause();
+    audio.currentTime = 0;
+    if (introAudio === audio) {
+      introAudio = null;
+    }
+  };
+}
+
+export function playIntroThenPhoneme(phonemeSrc?: string): () => void {
+  return playIntro(() => {
+    if (phonemeSrc) playPhonemeSound(phonemeSrc);
+  });
+}
+
+let phonemeAudio: HTMLAudioElement | null = null;
+
+export function playPhonemeSound(src: string) {
+  if (typeof window === "undefined") return;
+
+  if (phonemeAudio) {
+    phonemeAudio.pause();
+    phonemeAudio.currentTime = 0;
+  }
+
+  phonemeAudio = new Audio(src);
+  void phonemeAudio.play().catch(() => {});
+}
+
 export function speakWord(word: string) {
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 

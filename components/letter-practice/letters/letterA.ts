@@ -16,14 +16,7 @@ export const letterA: LetterDefinition = {
   letter: "a",
   spokenName: "the letter A",
 
-  acceptTranscripts: [
-    "a",
-    "ay",
-    "letter a",
-    "the letter a",
-    "uh",
-    "ah",
-  ],
+  acceptTranscripts: ["a", "ay", "letter a", "the letter a", "uh", "ah"],
 
   // Include half the stroke (14) plus a little air so the ruling lines are visible.
   viewBox: "12 105 172 168",
