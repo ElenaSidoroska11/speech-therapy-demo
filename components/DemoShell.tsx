@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Mic } from "lucide-react";
 import { LetterPractice } from "@/components/letter-practice/LetterPractice";
-import { LetterPicker } from "@/components/letter-practice/LetterPicker";
+import { LetterStyleSubNav, LetterPracticeSidebarFooter } from "@/components/letter-practice/LetterStyleSubNav";
+import type { LetterStyle } from "@/components/letter-practice/letterStyles";
 import type { LetterId } from "@/components/letter-practice/letters";
 import { HomeLanding, HomeScene } from "@/components/HomeLanding";
 import { ActivityNav, BrandSidebar } from "@/components/ActivityNav";
@@ -24,23 +25,63 @@ const PAGE_GRID =
 
 export function DemoShell() {
   const [activity, setActivity] = useState<Activity | null>(null);
+  const [letterPracticeMenuOpen, setLetterPracticeMenuOpen] = useState(false);
   const [letterId, setLetterId] = useState<LetterId>("s");
+  const [letterPracticeMode, setLetterPracticeMode] = useState<
+    "categories" | "exercise"
+  >("categories");
+  const [letterStyle, setLetterStyle] = useState<LetterStyle | null>(null);
 
-  const selectActivity = (id: string) => setActivity(id as Activity);
-  const goHome = () => setActivity(null);
+  const selectActivity = (id: string) => {
+    if (id === "letters") {
+      if (activity === "letters") return;
+      setLetterPracticeMenuOpen((open) => !open);
+      return;
+    }
+    setActivity(id as Activity);
+  };
+
+  const selectLetterStyle = (style: LetterStyle) => {
+    setLetterStyle(style);
+    setLetterPracticeMenuOpen(true);
+    setLetterPracticeMode("categories");
+    setActivity("letters");
+  };
+
+  const selectLetter = (id: LetterId) => {
+    setLetterId(id);
+    setLetterPracticeMode("exercise");
+  };
+
+  const goHome = () => {
+    setActivity(null);
+    setLetterPracticeMenuOpen(false);
+    setLetterPracticeMode("categories");
+    setLetterStyle(null);
+  };
+
+  const sidebarFooter =
+    activity === "letters" && letterStyle ? (
+      <LetterPracticeSidebarFooter
+        activeStyle={letterStyle}
+        letterId={letterId}
+        showLetterPicker={letterPracticeMode === "exercise"}
+        onSelectStyle={selectLetterStyle}
+        onSelectLetter={selectLetter}
+      />
+    ) : letterPracticeMenuOpen ? (
+      <LetterStyleSubNav activeStyle={letterStyle} onSelect={selectLetterStyle} />
+    ) : null;
 
   const sidebar = (
     <BrandSidebar
       items={NAV_ITEMS}
       activeId={activity}
+      lettersMenuOpen={letterPracticeMenuOpen}
       onSelect={selectActivity}
       onHome={goHome}
       className="md:row-span-2"
-      footer={
-        activity === "letters" ? (
-          <LetterPicker variant="sidebar" letterId={letterId} onSelect={setLetterId} />
-        ) : undefined
-      }
+      footer={sidebarFooter}
     />
   );
 
@@ -49,8 +90,10 @@ export function DemoShell() {
       <ActivityNav
         items={NAV_ITEMS}
         activeId={activity}
+        lettersMenuOpen={letterPracticeMenuOpen}
         onSelect={selectActivity}
         onHome={goHome}
+        footer={sidebarFooter}
       />
 
       <main className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -60,8 +103,14 @@ export function DemoShell() {
             {sidebar}
             {activity === null ? (
               <HomeLanding />
-            ) : activity === "letters" ? (
-              <LetterPractice letterId={letterId} onLetterChange={setLetterId} />
+            ) : activity === "letters" && letterStyle ? (
+              <LetterPractice
+                letterId={letterId}
+                letterStyle={letterStyle}
+                mode={letterPracticeMode}
+                onLetterChange={setLetterId}
+                onModeChange={setLetterPracticeMode}
+              />
             ) : null}
           </div>
         </div>

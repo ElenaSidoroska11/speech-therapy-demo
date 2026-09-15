@@ -29,6 +29,12 @@ export type LetterDefinition = {
    */
   fitAspectRatio?: number;
   /**
+   * Fixed handwriting-paper ruling lines (ascender + baseline).
+   * When set, used instead of measuring the path bounding box so short
+   * letters (a, c, s) share the same top/bottom guides as tall ones (h).
+   */
+  rulingLines?: { top: number; bottom: number };
+  /**
    * One SVG path `d` per letter/shape to practice.
    * Single letters: one entry. Digraphs like “wh”: one path for “w”, one for “h”.
    * Trace progress and success are tracked independently per path.

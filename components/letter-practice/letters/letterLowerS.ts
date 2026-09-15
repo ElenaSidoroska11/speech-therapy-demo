@@ -1,11 +1,13 @@
 import type { LetterDefinition } from "./types";
+import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
 
 /**
  * Cursive (Victoria Modern Script) lowercase s — one continuous stroke.
- * Start at the top right on the midline, hook counter-clockwise over the
- * top, drop down the left side, cross back through the centre, bulge
- * right, then sweep down to the baseline with a small leftward exit
- * flick. Coordinates fit a 120×168 artboard (viewBox "12 104 120 168").
+ * Start at the top right, hook counter-clockwise over the top, drop down
+ * the left side, cross back through the centre, bulge right, then sweep
+ * down to the baseline with a small leftward exit flick.
+ *
+ * Scaled to span the shared ascender → baseline band (same height as h).
  */
 export const letterLowerS: LetterDefinition = {
   id: "s",
@@ -21,13 +23,13 @@ export const letterLowerS: LetterDefinition = {
     "sss",
     "suh",
   ],
-  // Include half the stroke (14) plus a little air so the top ruling line is visible.
-  viewBox: "12 104 120 168",
-  fitAspectRatio: 120 / 168,
+  viewBox: LOWERCASE_ARTBOARD.viewBox,
+  fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+  rulingLines: lowercaseRulingLines(),
   strokePaths: [
-    "M 108 136 C 96 120 46 120 38 142 C 30 162 46 180 74 188 C 100 195 122 206 108 230 C 98 248 68 260 34 250",
+    "M 164.8 74.4 C 148 52 78 52 66.8 82.8 C 55.6 110.8 78 136 117.2 147.2 C 153.6 157 184.4 172.4 164.8 206 C 150.8 231.2 108.8 248 61.2 234",
   ],
-  strokeWidth: 28,
+  strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
   traceTolerance: 16,
   traceCoverage: 0.99,
   directionArrowFractions: [0.06],

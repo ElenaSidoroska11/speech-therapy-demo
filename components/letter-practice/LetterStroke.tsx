@@ -155,8 +155,11 @@ export function LetterStroke({
       });
 
       setPathLengths(lengths);
+      // Prefer fixed artboard rulings (ascender → baseline) so short letters
+      // like a/c/s match tall ones like h, instead of hugging the glyph.
       setRulingLines(
-        top !== Infinity ? { top, bottom } : null,
+        letter.rulingLines ??
+          (top !== Infinity ? { top, bottom } : null),
       );
       setDirectionGuides(
         showDirectionGuides
@@ -174,6 +177,7 @@ export function LetterStroke({
     paths,
     letter.id,
     letter.strokeWidth,
+    letter.rulingLines,
     letter.directionArrowFractions,
     showDirectionGuides,
   ]);

@@ -1,4 +1,5 @@
 import type { LetterDefinition } from "./types";
+import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
 
 /**
  * Cursive (Victoria Modern Script) lowercase h — two strokes.
@@ -10,8 +11,6 @@ import type { LetterDefinition } from "./types";
  * Starts at the baseline, retraces upward along the stem to
  * around x-height, forms a smooth rounded hump, comes back
  * down to the baseline, then finishes with a small exit tail.
- *
- * Coordinates fit a 120×232 artboard.
  */
 export const letterLowerH: LetterDefinition = {
   id: "h",
@@ -25,19 +24,19 @@ export const letterLowerH: LetterDefinition = {
     "huh",
   ],
 
-  // Include half the stroke (14) above the stem so the top ruling line is visible.
-  viewBox: "12 24 120 248",
-  fitAspectRatio: 120 / 248,
+  viewBox: LOWERCASE_ARTBOARD.viewBox,
+  fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+  rulingLines: lowercaseRulingLines(),
 
   strokePaths: [
     // 1. Tall descending stem (vertical)
-    "M 39 52 L 39 248",
+    "M 79.5 52 L 79.5 248",
 
     // 2. Retrace stem upward → rounded hump → down → exit tail
-    "M 39 248 C 41 220 43 190 47 165 C 50 146 58 137 68 137 C 84 137 93 153 93 174 C 93 196 84 219 86 235 C 88 248 97 252 106 246 C 112 242 116 235 120 228",
+    "M 79.5 248 C 81.5 220 83.5 190 87.5 165 C 90.5 146 98.5 137 108.5 137 C 124.5 137 133.5 153 133.5 174 C 133.5 196 124.5 219 126.5 235 C 128.5 248 137.5 252 146.5 246 C 152.5 242 156.5 235 160.5 228",
   ],
 
-  strokeWidth: 28,
+  strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
   traceTolerance: 36,
   traceCoverage: 0.99,
 

@@ -12,8 +12,8 @@ const PIECES = [
   "💛",
   "🌟",
   "🎈",
-  "💚",
-  "🧡",
+  "❤️",
+  "❤️",
   "🎊",
   "☀️",
 ];
@@ -21,10 +21,11 @@ const PIECES = [
 const BURST_COUNT = 24;
 
 function getBurstPieceLayout(index: number) {
-  const left = 6 + ((index * 41 + 11) % 88);
-  const top = 10 + ((index * 27 + 5) % 80);
-  const xDrift = (index % 2 === 0 ? 1 : -1) * (36 + (index % 7) * 28);
-  const yDrift = -50 - (index % 8) * 42;
+  const left = 4 + ((index * 41 + 11) % 92);
+  const top = 6 + ((index * 37 + 9) % 88);
+  const xDrift = (index % 2 === 0 ? 1 : -1) * (28 + (index % 7) * 24);
+  const ySign = index % 3 === 0 ? 1 : -1;
+  const yDrift = ySign * (36 + (index % 8) * 34);
   const rotate = (index % 2 === 0 ? 1 : -1) * (18 + (index % 5) * 14);
 
   return { left, top, xDrift, yDrift, rotate };
@@ -43,7 +44,7 @@ const burstTransition = {
   duration: BURST_DURATION,
   delay: BURST_DELAY,
   ease: "easeOut" as const,
-  repeat: 1,
+  repeat: 0,
 };
 
 export function CelebrationBurst() {
@@ -52,9 +53,35 @@ export function CelebrationBurst() {
   }, []);
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <>
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        {Array.from({ length: BURST_COUNT }).map((_, i) => {
+          const { left, top, xDrift, yDrift, rotate } = getBurstPieceLayout(i);
+          const emoji = PIECES[i % PIECES.length];
+
+          return (
+            <motion.span
+              key={i}
+              className="absolute text-4xl sm:text-5xl md:text-6xl"
+              style={{ left: `${left}%`, top: `${top}%` }}
+              initial={{ opacity: 0, y: 0, scale: 0.5, rotate: 0 }}
+              animate={{
+                opacity: burstMotion.opacity,
+                scale: burstMotion.scale,
+                x: [0, xDrift],
+                y: [0, yDrift],
+                rotate: [0, rotate, 0],
+              }}
+              transition={burstTransition}
+            >
+              {emoji}
+            </motion.span>
+          );
+        })}
+      </div>
+
       <motion.div
-        className="absolute z-10 -translate-x-1/2"
+        className="pointer-events-none absolute z-20 -translate-x-1/2"
         style={{ left: "50%", top: "40%" }}
         initial={{ opacity: 0, y: 0, scale: 0.5, rotate: 0 }}
         animate={burstMotion}
@@ -69,29 +96,6 @@ export function CelebrationBurst() {
           className="h-auto w-40 object-contain drop-shadow-[0_12px_24px_rgba(15,118,110,0.25)] sm:w-52 md:w-64"
         />
       </motion.div>
-      {Array.from({ length: BURST_COUNT }).map((_, i) => {
-        const { left, top, xDrift, yDrift, rotate } = getBurstPieceLayout(i);
-        const emoji = PIECES[i % PIECES.length];
-
-        return (
-          <motion.span
-            key={i}
-            className="absolute text-4xl sm:text-5xl md:text-6xl"
-            style={{ left: `${left}%`, top: `${top}%` }}
-            initial={{ opacity: 0, y: 0, scale: 0.5, rotate: 0 }}
-            animate={{
-              opacity: burstMotion.opacity,
-              scale: burstMotion.scale,
-              x: [0, xDrift],
-              y: [-12, yDrift],
-              rotate: [0, rotate, 0],
-            }}
-            transition={burstTransition}
-          >
-            {emoji}
-          </motion.span>
-        );
-      })}
-    </div>
+    </>
   );
 }

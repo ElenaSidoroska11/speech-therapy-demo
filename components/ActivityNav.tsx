@@ -83,6 +83,7 @@ const HOME_ITEM: ActivityNavItem = {
 function NavLinks({
   items,
   activeId,
+  lettersMenuOpen = false,
   onSelect,
   onHome,
   onPick,
@@ -90,16 +91,19 @@ function NavLinks({
 }: {
   items: ActivityNavItem[];
   activeId: string | null;
+  lettersMenuOpen?: boolean;
   onSelect: (id: string) => void;
   onHome: () => void;
   onPick?: () => void;
   size?: "md" | "lg";
 }) {
+  const homeActive = activeId === null && !lettersMenuOpen;
+
   return (
     <>
       <NavButton
         item={HOME_ITEM}
-        active={activeId === null}
+        active={homeActive}
         expanded
         size={size}
         onSelect={() => {
@@ -111,7 +115,11 @@ function NavLinks({
         <NavButton
           key={item.id}
           item={item}
-          active={activeId === item.id}
+          active={
+            item.id === "letters"
+              ? lettersMenuOpen || activeId === item.id
+              : activeId === item.id
+          }
           expanded
           size={size}
           onSelect={() => {
@@ -127,6 +135,7 @@ function NavLinks({
 export function ActivityDesktopNav({
   items,
   activeId,
+  lettersMenuOpen,
   onSelect,
   onHome,
   className,
@@ -134,6 +143,7 @@ export function ActivityDesktopNav({
 }: {
   items: ActivityNavItem[];
   activeId: string | null;
+  lettersMenuOpen?: boolean;
   onSelect: (id: string) => void;
   onHome: () => void;
   className?: string;
@@ -144,6 +154,7 @@ export function ActivityDesktopNav({
       <NavLinks
         items={items}
         activeId={activeId}
+        lettersMenuOpen={lettersMenuOpen}
         onSelect={onSelect}
         onHome={onHome}
         size={size}
@@ -155,6 +166,7 @@ export function ActivityDesktopNav({
 export function BrandSidebar({
   items,
   activeId,
+  lettersMenuOpen,
   onSelect,
   onHome,
   className = "",
@@ -162,6 +174,7 @@ export function BrandSidebar({
 }: {
   items: ActivityNavItem[];
   activeId: string | null;
+  lettersMenuOpen?: boolean;
   onSelect: (id: string) => void;
   onHome: () => void;
   className?: string;
@@ -178,6 +191,7 @@ export function BrandSidebar({
         <ActivityDesktopNav
           items={items}
           activeId={activeId}
+          lettersMenuOpen={lettersMenuOpen}
           onSelect={onSelect}
           onHome={onHome}
           size="lg"
@@ -192,13 +206,17 @@ export function BrandSidebar({
 export function ActivityNav({
   items,
   activeId,
+  lettersMenuOpen,
   onSelect,
   onHome,
+  footer,
 }: {
   items: ActivityNavItem[];
   activeId: string | null;
+  lettersMenuOpen?: boolean;
   onSelect: (id: string) => void;
   onHome: () => void;
+  footer?: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
@@ -249,10 +267,12 @@ export function ActivityNav({
               <NavLinks
                 items={items}
                 activeId={activeId}
+                lettersMenuOpen={lettersMenuOpen}
                 onSelect={onSelect}
                 onHome={onHome}
                 onPick={() => setOpen(false)}
               />
+              {footer ? <div className="mt-1 border-t border-white/50 pt-2">{footer}</div> : null}
             </motion.nav>
           </>
         ) : null}

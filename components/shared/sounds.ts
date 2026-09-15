@@ -8,13 +8,7 @@ function getAudioContext() {
   return audioCtx;
 }
 
-function tone(
-  freq: number,
-  start: number,
-  duration: number,
-  type: OscillatorType = "sine",
-  gain = 0.12,
-) {
+function tone(freq: number, start: number, duration: number, type: OscillatorType = "sine", gain = 0.12) {
   const ctx = getAudioContext();
   if (!ctx) return;
 
@@ -23,10 +17,7 @@ function tone(
   osc.type = type;
   osc.frequency.value = freq;
   g.gain.setValueAtTime(gain, ctx.currentTime + start);
-  g.gain.exponentialRampToValueAtTime(
-    0.001,
-    ctx.currentTime + start + duration,
-  );
+  g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + duration);
   osc.connect(g);
   g.connect(ctx.destination);
   osc.start(ctx.currentTime + start);
@@ -56,35 +47,17 @@ export function playCelebration() {
 }
 
 let yayyAudio: HTMLAudioElement | null = null;
-let yayyEndedHandler: (() => void) | null = null;
 
 export function playYayy() {
   if (typeof window === "undefined") return;
 
-  if (yayyAudio && yayyEndedHandler) {
-    yayyAudio.removeEventListener("ended", yayyEndedHandler);
-  }
   if (yayyAudio) {
     yayyAudio.pause();
     yayyAudio.currentTime = 0;
   }
 
-  let playsLeft = 2;
-  const audio = new Audio("/yayy.mp3");
+  const audio = new Audio("/kids-yayy.mp3");
   yayyAudio = audio;
-
-  const onEnded = () => {
-    playsLeft -= 1;
-    if (playsLeft > 0) {
-      audio.currentTime = 0;
-      void audio.play().catch(() => {});
-      return;
-    }
-    yayyEndedHandler = null;
-  };
-
-  yayyEndedHandler = onEnded;
-  audio.addEventListener("ended", onEnded);
   void audio.play().catch(() => {});
 }
 
@@ -134,6 +107,71 @@ export function playIntroThenPhoneme(phonemeSrc?: string): () => void {
   return playIntro(() => {
     if (phonemeSrc) playPhonemeSound(phonemeSrc);
   });
+}
+
+let watchHowAudio: HTMLAudioElement | null = null;
+let watchHowCompleteHandler: (() => void) | null = null;
+
+export function playWatchHow(onComplete?: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+
+  if (watchHowAudio && watchHowCompleteHandler) {
+    watchHowAudio.removeEventListener("ended", watchHowCompleteHandler);
+  }
+  if (watchHowAudio) {
+    watchHowAudio.pause();
+    watchHowAudio.currentTime = 0;
+  }
+
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    watchHowCompleteHandler = null;
+    onComplete?.();
+  };
+
+  const audio = new Audio("/watch-how.wav");
+  watchHowAudio = audio;
+  watchHowCompleteHandler = finish;
+  audio.addEventListener("ended", finish, { once: true });
+  void audio.play().catch(() => {});
+
+  return () => {
+    finished = true;
+    audio.removeEventListener("ended", finish);
+    if (watchHowCompleteHandler === finish) {
+      watchHowCompleteHandler = null;
+    }
+    audio.pause();
+    audio.currentTime = 0;
+    if (watchHowAudio === audio) {
+      watchHowAudio = null;
+    }
+  };
+}
+
+let letterPracticeAudio: HTMLAudioElement | null = null;
+
+export function playLetterPractice(): () => void {
+  if (typeof window === "undefined") return () => {};
+
+  if (letterPracticeAudio) {
+    letterPracticeAudio.pause();
+    letterPracticeAudio.currentTime = 0;
+  }
+
+  const audio = new Audio("/letter-practice.wav");
+  letterPracticeAudio = audio;
+  void audio.play().catch(() => {});
+
+  return () => {
+    audio.pause();
+    audio.currentTime = 0;
+    if (letterPracticeAudio === audio) {
+      letterPracticeAudio = null;
+    }
+  };
 }
 
 let phonemeAudio: HTMLAudioElement | null = null;

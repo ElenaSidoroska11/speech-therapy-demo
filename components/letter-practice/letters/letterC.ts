@@ -1,10 +1,12 @@
 import type { LetterDefinition } from "./types";
+import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
 
 /**
  * Cursive (Victoria Modern Script) lowercase c — one continuous stroke.
  * Start on the upper right, curve counterclockwise over the top, down the
  * back, along the baseline, then up with an open exit to the right.
- * Coordinates fit a 200×280 artboard so the letter reads large on tablets.
+ *
+ * Scaled to span the shared ascender → baseline band (same height as h).
  */
 export const letterC: LetterDefinition = {
   id: "c",
@@ -18,13 +20,13 @@ export const letterC: LetterDefinition = {
     "the letter c",
     "kuh",
   ],
-  // Include half the stroke (14) plus a little air so round caps are not clipped.
-  viewBox: "14 117 134 163",
-  fitAspectRatio: 134 / 163,
+  viewBox: LOWERCASE_ARTBOARD.viewBox,
+  fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+  rulingLines: lowercaseRulingLines(),
   strokePaths: [
-    "M 126 160 C 126 144 108 134 84 137 C 54 141 34 170 34 204 C 34 240 58 260 90 260 C 112 260 128 244 128 218",
+    "M 190 92.4 C 190 67.6 162 52 124.7 56.7 C 78 62.9 46.9 108 46.9 160.9 C 46.9 216.9 84.2 248 134 248 C 168.2 248 193.1 223.1 193.1 182.7",
   ],
-  strokeWidth: 28,
+  strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
   traceTolerance: 36,
   traceCoverage: 0.99,
   directionArrowFractions: [0.12],

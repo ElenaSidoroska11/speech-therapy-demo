@@ -1,31 +1,53 @@
 "use client";
 
 import { useEffect } from "react";
-import { playIntroThenPhoneme } from "@/components/shared/sounds";
+import { playLetterPractice } from "@/components/shared/sounds";
+import { LetterCategoryView } from "./LetterCategoryView";
 import { TraceLetterExercise } from "./TraceLetterExercise";
-import { getLetter, type LetterId } from "./letters";
+import type { LetterStyle } from "./letterStyles";
+import type { LetterId } from "./letters";
+
+type LetterPracticeMode = "categories" | "exercise";
 
 /** Letter Practice  */
 export function LetterPractice({
   letterId,
+  letterStyle,
+  mode,
   onLetterChange,
+  onModeChange,
 }: {
   letterId: LetterId;
+  letterStyle: LetterStyle | null;
+  mode: LetterPracticeMode;
   onLetterChange: (id: LetterId) => void;
+  onModeChange: (mode: LetterPracticeMode) => void;
 }) {
   useEffect(() => {
-    const letter = getLetter(letterId);
-    let cancelIntro: (() => void) | undefined;
+    if (mode !== "categories") return;
+
+    let cancelLetterPractice: (() => void) | undefined;
 
     const delayId = window.setTimeout(() => {
-      cancelIntro = playIntroThenPhoneme(letter.phonemeSound);
+      cancelLetterPractice = playLetterPractice();
     }, 3000);
 
     return () => {
       window.clearTimeout(delayId);
-      cancelIntro?.();
+      cancelLetterPractice?.();
     };
-  }, []);
+  }, [mode]);
+
+  const selectLetter = (id: LetterId) => {
+    onLetterChange(id);
+    onModeChange("exercise");
+  };
+
+  if (mode === "categories") {
+    return (
+      <LetterCategoryView style={letterStyle} onSelectLetter={selectLetter} />
+    );
+  }
 
   return (
     <TraceLetterExercise
