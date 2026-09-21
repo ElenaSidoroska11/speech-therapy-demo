@@ -188,6 +188,21 @@ export function playPhonemeSound(src: string) {
   void phonemeAudio.play().catch(() => {});
 }
 
+let softErrorAudio: HTMLAudioElement | null = null;
+
+export function playSoftError() {
+  if (typeof window === "undefined") return;
+
+  if (softErrorAudio) {
+    softErrorAudio.pause();
+    softErrorAudio.currentTime = 0;
+  }
+
+  const audio = new Audio("/soft-error.mp3");
+  softErrorAudio = audio;
+  void audio.play().catch(() => {});
+}
+
 export function speakWord(word: string) {
   if (typeof window === "undefined" || !window.speechSynthesis) return;
 

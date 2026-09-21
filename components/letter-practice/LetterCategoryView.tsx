@@ -23,8 +23,8 @@ function StyleCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full max-w-2xl rounded-4xl bg-white/55 p-4 pt-5 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm sm:p-6 sm:pt-6">
-      <h2 className="mb-4 text-center font-(family-name:--font-display) text-xl font-extrabold tracking-wide text-[#e52328] drop-shadow-[0_2px_0_rgba(15,118,110,0.25)] sm:mb-5 sm:text-2xl md:text-3xl">
+    <div className="w-full max-w-2xl rounded-4xl bg-white/55 p-3.5 pt-4 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm sm:p-5 sm:pt-5">
+      <h2 className="mb-3.5 text-center font-(family-name:--font-display) text-xl font-extrabold tracking-wide text-[#e52328] drop-shadow-[0_2px_0_rgba(15,118,110,0.25)] sm:mb-4 sm:text-2xl md:text-3xl">
         {title}
       </h2>
       {children}

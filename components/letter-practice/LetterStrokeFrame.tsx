@@ -6,6 +6,8 @@ type LetterStrokeFrameProps = {
   /** Match the letter ink aspect so it can fill the card without distortion. */
   fitAspectRatio?: number;
   toolbar?: ReactNode;
+  /** Drawn inside the card (e.g. feedback badge), above the letter. */
+  overlay?: ReactNode;
   children: ReactNode;
 };
 
@@ -14,6 +16,7 @@ export function LetterStrokeFrame({
   withCueImages = false,
   fitAspectRatio,
   toolbar,
+  overlay,
   children,
 }: LetterStrokeFrameProps) {
   const maxWidth = withCueImages
@@ -47,6 +50,7 @@ export function LetterStrokeFrame({
             {children}
           </div>
         )}
+        {overlay}
       </div>
     </div>
   );

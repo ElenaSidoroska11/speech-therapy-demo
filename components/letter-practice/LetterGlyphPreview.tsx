@@ -30,10 +30,14 @@ function boundsFromPaths(paths: string[]) {
   return { minX, minY, maxX, maxY };
 }
 
+/** Stroke thickness as a fraction of the preview crop — keeps tile weight even. */
+const PREVIEW_STROKE_RATIO = 0.12;
+
 /**
  * Compact SVG preview for picker tiles.
- * Crops to each glyph’s ink bounds (not the shared practice artboard),
- * so narrow letters like h fill the tile at the same height as a/c/s.
+ * Crops to each glyph’s ink so every letter fills the tile at a similar size,
+ * and uses a crop-relative stroke so short letters (a, c) don’t look thinner
+ * or bolder than tall ones (b, d, h).
  */
 export function LetterGlyphPreview({
   letter,
@@ -41,16 +45,25 @@ export function LetterGlyphPreview({
   stroke = "#FDA702",
 }: LetterGlyphPreviewProps) {
   const bounds = boundsFromPaths(letter.strokePaths);
+  // Pad from the letter’s real stroke so round caps aren’t clipped.
   const pad = letter.strokeWidth * 0.55;
 
-  const crop = (() => {
-    if (!bounds) return letter.viewBox;
+  const { crop, previewStroke } = (() => {
+    if (!bounds) {
+      return {
+        crop: letter.viewBox,
+        previewStroke: letter.strokeWidth,
+      };
+    }
     const glyphW = bounds.maxX - bounds.minX;
     const glyphH = bounds.maxY - bounds.minY;
     const side = Math.max(glyphW, glyphH) + pad * 2;
     const cx = (bounds.minX + bounds.maxX) / 2;
     const cy = (bounds.minY + bounds.maxY) / 2;
-    return `${cx - side / 2} ${cy - side / 2} ${side} ${side}`;
+    return {
+      crop: `${cx - side / 2} ${cy - side / 2} ${side} ${side}`,
+      previewStroke: side * PREVIEW_STROKE_RATIO,
+    };
   })();
 
   return (
@@ -58,14 +71,15 @@ export function LetterGlyphPreview({
       viewBox={crop}
       className={className}
       aria-hidden
-      preserveAspectRatio="xMidYMid meet">
+      preserveAspectRatio="xMidYMid meet"
+    >
       {letter.strokePaths.map((d, i) => (
         <path
           key={`${letter.id}-${i}`}
           d={d}
           fill="none"
           stroke={stroke}
-          strokeWidth={letter.strokeWidth}
+          strokeWidth={previewStroke}
           strokeLinecap="round"
           strokeLinejoin="round"
         />

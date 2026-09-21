@@ -5,17 +5,25 @@ import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
  * Cursive (Victoria Modern Script) lowercase h — two strokes.
  *
  * Stroke 1:
- * Starts at the top line and travels straight down to the baseline.
+ * Starts at the top/ascender line and travels downward
+ * with a slight leftward slant to the baseline.
+ * Spans line 1 → line 3.
  *
  * Stroke 2:
- * Starts at the baseline, retraces upward along the stem to
- * around x-height, forms a smooth rounded hump, comes back
- * down to the baseline, then finishes with a small exit tail.
+ * Starts at the bottom of stroke 1, retraces upward along
+ * the same stem to x-height, forms the rounded hump,
+ * descends to the baseline, then curves upward/right
+ * into the exit tail.
+ * Hump spans line 2 → line 3.
+ *
+ * Same design as the hand-tuned paths; Y inset so visible
+ * ink stays on/inside the guide lines.
  */
 export const letterLowerH: LetterDefinition = {
   id: "h",
   letter: "h",
   spokenName: "the letter H",
+
   acceptTranscripts: [
     "h",
     "aitch",
@@ -26,19 +34,59 @@ export const letterLowerH: LetterDefinition = {
 
   viewBox: LOWERCASE_ARTBOARD.viewBox,
   fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+
   rulingLines: lowercaseRulingLines(),
 
   strokePaths: [
-    // 1. Tall descending stem (vertical)
-    "M 79.5 52 L 79.5 248",
+    /**
+     * STROKE 1
+     *
+     * Top blue dot → baseline (line 1 → line 3).
+     * Slight leftward slant like the worksheet.
+     */
+    [
+      "M 112 66",
+      "C 107 93.4 101 123.4 95 153.4",
+      "C 89 184.3 82 211.7 76 234",
+    ].join(" "),
 
-    // 2. Retrace stem upward → rounded hump → down → exit tail
-    "M 79.5 248 C 81.5 220 83.5 190 87.5 165 C 90.5 146 98.5 137 108.5 137 C 124.5 137 133.5 153 133.5 174 C 133.5 196 124.5 219 126.5 235 C 128.5 248 137.5 252 146.5 246 C 152.5 242 156.5 235 160.5 228",
+    /**
+     * STROKE 2
+     *
+     * Bottom → retrace upward → x-height →
+     * rounded hump → down → exit tail
+     * (line 2 → line 3).
+     */
+    [
+      // Start exactly where stroke 1 finishes
+      "M 76 234",
+
+      // Retrace UP along the same stem
+      "C 82 218.8 89 200.2 95 179.2",
+
+      // Arrive at x-height (line 2) and move into hump
+      "C 101 169.2 111 164 123 164",
+
+      // Rounded hump under line 2
+      "C 140 164 151 171.6 152 182.1",
+
+      // Right side of hump descends
+      "C 153 193.8 146 207.2 143 218.2",
+
+      // Reach baseline (line 3)
+      "C 140 228.8 142 234 150 234",
+
+      // Smooth exit tail up/right
+      "C 160 234 173 231.7 186 222.9",
+    ].join(" "),
   ],
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
+
   traceTolerance: 36,
   traceCoverage: 0.99,
 
-  directionArrowFractions: [0.05, 0.1],
+  // 1 = downward stem
+  // 2 = hump
+  directionArrowFractions: [0.12, 0.42],
 };

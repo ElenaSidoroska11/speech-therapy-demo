@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { CelebrationBurst } from "@/components/shared/CelebrationBurst";
+import { playSoftError } from "@/components/shared/sounds";
 import { LetterPicker } from "./LetterPicker";
 import { TraceExerciseHeader } from "./TraceExerciseHeader";
 import { TraceExerciseWorkspace } from "./TraceExerciseWorkspace";
@@ -29,6 +30,7 @@ export function TraceLetterExercise({
   const [letterId, setLetterId] = useState<LetterId>(initialLetter);
   const [session, setSession] = useState(0);
   const [celebrate, setCelebrate] = useState(false);
+  const [errorPulse, setErrorPulse] = useState(0);
   const letter = getLetter(letterId);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
@@ -39,6 +41,11 @@ export function TraceLetterExercise({
 
   const handleComplete = useCallback(() => {
     setCelebrate(true);
+  }, []);
+
+  const handleOffPath = useCallback(() => {
+    playSoftError();
+    setErrorPulse((n) => n + 1);
   }, []);
 
   const {
@@ -59,6 +66,7 @@ export function TraceLetterExercise({
     pathKey: `${letter.strokePaths.join("|")}-${session}`,
     enabled: true,
     onComplete: handleComplete,
+    onOffPath: handleOffPath,
   });
 
   const clearTrace = () => {
@@ -92,6 +100,7 @@ export function TraceLetterExercise({
       progress={progress}
       nextLetter={nextLetter}
       demoProgress={demoProgress}
+      errorPulse={errorPulse}
       svgRef={svgRef}
       pathRefs={pathRefs}
       onDemoMeasured={handleDemoMeasured}

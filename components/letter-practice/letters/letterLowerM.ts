@@ -1,26 +1,35 @@
 import type { LetterDefinition } from "./types";
 
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
+
 /**
- * Cursive (Victoria Modern Script) lowercase m — three strokes.
+ * Victoria Modern Script lowercase m — one continuous stroke.
  *
- * Stroke 1:
- * Start near the baseline, travel upward, make the first
- * rounded hump, then descend to the baseline.
+ * Spans line 2 (x-height) → line 3 (baseline):
  *
- * Stroke 2:
- * Start at the bottom of the first downstroke, travel upward,
- * make the second rounded hump, then descend to the baseline.
+ * 1. Start near x-height.
+ * 2. Small entry under line 2.
+ * 3. First downstroke to the baseline.
+ * 4. Rise into the first rounded hump (line 2).
+ * 5. Descend to the baseline.
+ * 6. Rise into the second rounded hump (line 2).
+ * 7. Descend to the baseline.
+ * 8. Finish with an upward/right exit tail.
  *
- * Stroke 3:
- * Start at the bottom of the second downstroke, travel upward,
- * make the third rounded hump, descend to the baseline,
- * then finish with a small cursive exit tail.
- *
- * Coordinates fit a 200×280 artboard.
+ * Reference arrows:
+ * 1 = first arch / first downstroke
+ * 2 = second arch
+ * 3 = third arch / exit section
  */
+
 export const letterLowerM: LetterDefinition = {
   id: "m",
+
   letter: "m",
+
   spokenName: "the letter M",
 
   acceptTranscripts: [
@@ -28,28 +37,68 @@ export const letterLowerM: LetterDefinition = {
     "em",
     "letter m",
     "the letter m",
-    "mmm",
-    "muh",
   ],
 
-  viewBox: "10 111 160 161",
-  fitAspectRatio: 160 / 161,
+  viewBox: LOWERCASE_ARTBOARD.viewBox,
+
+  fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+
+  rulingLines: lowercaseRulingLines(),
 
   strokePaths: [
-    // Stroke 1 — first stem + first rounded hump
-    "M 28 258 C 30 232 33 198 35 168 C 36 151 39 137 48 134 C 59 130 68 139 69 153 C 70 169 64 190 62 211 C 60 230 59 246 60 258",
+    [
+      // Start on x-height / line 2
+      "M 48 168",
 
-    // Stroke 2 — second stem + second rounded hump
-    "M 60 258 C 62 230 65 196 67 166 C 68 149 72 137 81 134 C 92 130 101 139 102 153 C 103 169 97 190 95 211 C 93 231 93 247 96 258",
+      // Small entry — stay under line 2
+      "C 56 162 66 160 76 164",
 
-    // Stroke 3 — third stem + third rounded hump + exit tail
-    "M 96 258 C 98 230 101 196 103 166 C 104 149 108 137 117 134 C 128 130 137 139 138 153 C 139 169 134 190 132 210 C 130 230 131 244 138 248 C 145 252 153 246 160 238",
+      // First rounded top under line 2
+      "C 84 168 86 176 84 186",
+
+      // FIRST DOWNSTROKE to baseline (line 3)
+      "C 80 200 74 218 68 234",
+
+      // Rise into FIRST HUMP
+      "C 74 218 82 190 94 172",
+
+      // Rounded top of first hump (line 2)
+      "C 102 164 114 160 126 164",
+
+      // Descend from first hump
+      "C 138 168 138 180 134 194",
+
+      // SECOND DOWNSTROKE to baseline
+      "C 130 210 124 224 118 234",
+
+      // Rise into SECOND HUMP
+      "C 124 218 132 190 144 172",
+
+      // Rounded top of second hump (line 2)
+      "C 152 164 164 160 174 164",
+
+      // Round over the top
+      "C 184 168 186 180 182 194",
+
+      // THIRD DOWNSTROKE to baseline
+      "C 178 210 172 224 168 234",
+
+      // Bottom turn on baseline
+      "C 166 240 172 242 178 240",
+
+      // Short exit tail — upward/right
+      "C 186 236 194 228 200 220",
+    ].join(" "),
   ],
 
-  strokeWidth: 28,
+  strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
+
   traceTolerance: 36,
+
   traceCoverage: 0.99,
 
-  // Worksheet arrows 1, 2 and 3
-  directionArrowFractions: [0.08, 0.08, 0.08],
+  // 1 = first section
+  // 2 = first hump
+  // 3 = second hump
+  directionArrowFractions: [0.08, 0.38, 0.68],
 };

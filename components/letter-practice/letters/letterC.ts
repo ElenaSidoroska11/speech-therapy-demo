@@ -3,15 +3,21 @@ import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
 
 /**
  * Cursive (Victoria Modern Script) lowercase c — one continuous stroke.
- * Start on the upper right, curve counterclockwise over the top, down the
- * back, along the baseline, then up with an open exit to the right.
  *
- * Scaled to span the shared ascender → baseline band (same height as h).
+ * Stroke 1:
+ * Starts at the blue dot on the upper-right at x-height.
+ * Moves left across the rounded top, curves counterclockwise
+ * down the left side, rounds along the baseline, then curves
+ * upward/right into the open ending.
+ *
+ * Same shape as the full-band c, scaled uniformly to sit
+ * between midline (line 2) and baseline (line 3).
  */
 export const letterC: LetterDefinition = {
   id: "c",
   letter: "c",
   spokenName: "the letter C",
+
   acceptTranscripts: [
     "c",
     "cee",
@@ -20,14 +26,38 @@ export const letterC: LetterDefinition = {
     "the letter c",
     "kuh",
   ],
+
   viewBox: LOWERCASE_ARTBOARD.viewBox,
   fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+
   rulingLines: lowercaseRulingLines(),
+
   strokePaths: [
-    "M 190 92.4 C 190 67.6 162 52 124.7 56.7 C 78 62.9 46.9 108 46.9 160.9 C 46.9 216.9 84.2 248 134 248 C 168.2 248 193.1 223.1 193.1 182.7",
+    [
+      // Start at blue dot — upper-right at x-height
+      "M 148.4 166.3",
+
+      // Move left across the rounded top
+      "C 136.1 160.5 120.4 160.5 107.5 164.6",
+
+      // Continue left and begin curving downward
+      "C 91.2 169.8 81.3 180.9 79 196.1",
+
+      // Down around the left side
+      "C 76.6 212 82.5 228 93.5 235",
+
+      // Round across the bottom sitting on baseline (line 3)
+      "C 104.6 241 118.6 239 128.5 230",
+
+      // Finish with the short upward/right open end
+      "C 133.2 225 136.7 220 140.2 215",
+    ].join(" "),
   ],
-  strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
-  traceTolerance: 36,
+
+  strokeWidth: 21,
+  traceTolerance: 28,
   traceCoverage: 0.99,
-  directionArrowFractions: [0.12],
+
+  // Arrow 1 near the beginning/top of the c
+  directionArrowFractions: [0.1],
 };

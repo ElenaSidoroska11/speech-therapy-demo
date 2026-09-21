@@ -1,35 +1,90 @@
 import type { LetterDefinition } from "./types";
 
+import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+
 /**
- * Cursive (Victoria Modern Script) lowercase y — two strokes.
- * Stroke 1: the “u”, starting on the x-height at the left, down to the
- * baseline with a slight rightward slant, round across the bottom, and
- * back up to the x-height on the right.
- * Stroke 2: continues from that same top point, straight down through the
- * baseline to the descender line, then sweeps left in an open hook that
- * curves slightly upward — like a natural pen lift.
- * Coordinates fit a 120×232 artboard (viewBox "12 40 120 232").
+ * Victoria Modern Script lowercase y — two strokes.
+ *
+ * Stroke 1:
+ * Starts at x-height on the left.
+ * Travels downward with a slight leftward slant,
+ * forms a smooth rounded bottom at the baseline,
+ * then rises back up to x-height.
+ *
+ * Stroke 2:
+ * Starts at x-height on the right.
+ * Travels downward through the baseline and continues
+ * into the descender area.
+ * At the bottom it forms a large rounded curve
+ * sweeping toward the left along the descender line.
  */
+
 export const letterLowerY: LetterDefinition = {
   id: "y",
+
   letter: "y",
+
   spokenName: "the letter Y",
+
+  phonemeSound: "/sounds/y-phoneme.mp3",
+
   acceptTranscripts: [
     "y",
     "why",
-    "wye",
     "letter y",
     "the letter y",
     "yuh",
   ],
-  viewBox: "12 40 120 232",
-  fitAspectRatio: 120 / 232,
+
+  viewBox: LOWERCASE_ARTBOARD.viewBox,
+
+  fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+
+  rulingLines: lowercaseRulingLines(),
+
   strokePaths: [
-    "M 32 52 L 38 168 C 48 178 62 178 74 168 L 74 52",
-    "M 74 52 L 80 248 C 62 262 42 252 34 232 Q 40 210 50 194",
+    [
+      // Stroke 1 — start at x-height on the left
+      "M 105 165",
+
+      // Descend with a slight leftward slant
+      "C 102 184 98 205 98 219",
+
+      // Rounded bottom of the u-shape
+      "C 98 231 104 237 114 237",
+
+      // Sweep right and begin rising
+      "C 126 237 137 227 145 214",
+
+      // Rise back to x-height
+      "C 155 198 161 180 165 165",
+    ].join(" "),
+
+    [
+      // Stroke 2 — start at x-height on the right
+      "M 165 165",
+
+      // Descend along the right stem
+      "C 162 188 158 214 155 237",
+
+      // Continue below the baseline
+      "C 152 259 149 280 145 297",
+
+      // Curve toward the bottom of the descender
+      "C 141 315 133 326 121 330",
+
+      // Large rounded sweep toward the left
+      "C 108 335 91 334 76 329",
+    ].join(" "),
   ],
-  strokeWidth: 28,
-  traceTolerance: 36,
+
+  strokeWidth: 21,
+
+  traceTolerance: 20,
+
   traceCoverage: 0.99,
-  directionArrowFractions: [0.08, 0.08],
+
+  // Stroke 1: downward from x-height
+  // Stroke 2: downward through the descender
+  directionArrowFractions: [0.13, 0.27],
 };

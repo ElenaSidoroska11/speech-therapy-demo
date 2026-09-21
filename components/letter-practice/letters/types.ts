@@ -4,7 +4,40 @@
  *
  * Note: not every id is active — see which entries are registered in `index.ts`.
  */
-export type LetterId = "S" | "M" | "L" | "a" | "c" | "h" | "m" | "s" | "y" | "ch" | "sh" | "th" | "wh";
+export type LetterId =
+  | "S"
+  | "M"
+  | "L"
+  | "a"
+  | "b"
+  | "c"
+  | "d"
+  | "e"
+  | "f"
+  | "g"
+  | "h"
+  | "i"
+  | "j"
+  | "k"
+  | "l"
+  | "m"
+  | "n"
+  | "o"
+  | "p"
+  | "q"
+  | "r"
+  | "s"
+  | "t"
+  | "u"
+  | "v"
+  | "y"
+  | "x"
+  | "w"
+  | "z"
+  | "ch"
+  | "sh"
+  | "th"
+  | "wh";
 
 export type LetterCueImage = {
   src: string;
@@ -29,11 +62,17 @@ export type LetterDefinition = {
    */
   fitAspectRatio?: number;
   /**
-   * Fixed handwriting-paper ruling lines (ascender + baseline).
-   * When set, used instead of measuring the path bounding box so short
-   * letters (a, c, s) share the same top/bottom guides as tall ones (h).
+   * Fixed handwriting-paper ruling lines (4 equal-spaced guides):
+   * top (ascender), mid (x-height), baseline, bottom (descender).
+   * When set, used instead of measuring the path bounding box so every
+   * letter shares the same worksheet rules.
    */
-  rulingLines?: { top: number; bottom: number };
+  rulingLines?: {
+    top: number;
+    mid: number;
+    baseline: number;
+    bottom: number;
+  };
   /**
    * One SVG path `d` per letter/shape to practice.
    * Single letters: one entry. Digraphs like “wh”: one path for “w”, one for “h”.

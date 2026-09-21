@@ -52,7 +52,25 @@ type LetterStrokeProps = {
   showCueImages?: boolean;
 };
 
-type RulingLines = { top: number; bottom: number };
+type RulingLines = {
+  top: number;
+  mid: number;
+  baseline: number;
+  bottom: number;
+};
+
+const RULING_EDGES = ["top", "mid", "baseline", "bottom"] as const;
+
+/** When only a glyph bbox is known, invent equal mid/baseline/bottom guides. */
+function rulingLinesFromBBox(top: number, bottom: number): RulingLines {
+  const gap = (bottom - top) / 3;
+  return {
+    top,
+    mid: top + gap,
+    baseline: top + 2 * gap,
+    bottom,
+  };
+}
 
 function parseViewBox(viewBox: string) {
   const [x = 0, y = 0, width = 100, height = 100] = viewBox
@@ -76,6 +94,11 @@ function strokeDrawDurationSec(pathCount: number) {
   // draw one stem at a time so kids see handwriting order.
   return pathCount <= 1 ? 3.5 : 1.05;
 }
+
+/** Orange demo / coverage fill is drawn thinner than the full letter width. */
+const ORANGE_STROKE_SCALE = 0.4;
+/** Soft gray guide outline under the orange stroke. */
+const GUIDE_STROKE_SCALE = 0.75;
 
 export function LetterStroke({
   letter,
@@ -103,7 +126,7 @@ export function LetterStroke({
   );
   /** Which letter the current pathLengths were measured for (avoids stale lengths). */
   const [measuredForId, setMeasuredForId] = useState<string | null>(null);
-  /** Handwriting-paper top and baseline guides */
+  /** Handwriting-paper 4-line guides (topline → bottomline) */
   const [rulingLines, setRulingLines] = useState<RulingLines | null>(null);
   const [directionGuides, setDirectionGuides] = useState<DirectionGuide[]>([]);
   const letterBox = parseViewBox(letter.viewBox);
@@ -155,11 +178,11 @@ export function LetterStroke({
       });
 
       setPathLengths(lengths);
-      // Prefer fixed artboard rulings (ascender → baseline) so short letters
-      // like a/c/s match tall ones like h, instead of hugging the glyph.
+      // Prefer fixed artboard rulings so every letter shares the same
+      // 4-line worksheet (topline / midline / baseline / bottomline).
       setRulingLines(
         letter.rulingLines ??
-          (top !== Infinity ? { top, bottom } : null),
+          (top !== Infinity ? rulingLinesFromBBox(top, bottom) : null),
       );
       setDirectionGuides(
         showDirectionGuides
@@ -208,20 +231,23 @@ export function LetterStroke({
       >
         {showGuide &&
           rulingLines &&
-          (["top", "bottom"] as const).map((edge) => (
-            <line
-              key={`ruling-${edge}`}
-              x1={viewBox.x}
-              y1={rulingLines[edge]}
-              x2={viewBox.x + viewBox.width}
-              y2={rulingLines[edge]}
-              stroke="rgba(15, 61, 54, 0.22)"
-              strokeWidth={1.5}
-              strokeDasharray="3 7"
-              strokeLinecap="round"
-              pointerEvents="none"
-            />
-          ))}
+          RULING_EDGES.map((edge) => {
+            const isBaseline = edge === "baseline";
+            return (
+              <line
+                key={`ruling-${edge}`}
+                x1={viewBox.x}
+                y1={rulingLines[edge]}
+                x2={viewBox.x + viewBox.width}
+                y2={rulingLines[edge]}
+                stroke="rgba(15, 61, 54, 0.22)"
+                strokeWidth={isBaseline ? 2.25 : 1.5}
+                strokeDasharray={isBaseline ? undefined : "3 7"}
+                strokeLinecap="round"
+                pointerEvents="none"
+              />
+            );
+          })}
 
         {showGuide &&
           rulingLines &&
@@ -249,7 +275,7 @@ export function LetterStroke({
               d={d}
               fill="none"
               stroke="rgba(15, 61, 54, 0.12)"
-              strokeWidth={letter.strokeWidth}
+              strokeWidth={letter.strokeWidth * GUIDE_STROKE_SCALE}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -294,7 +320,7 @@ export function LetterStroke({
               stroke={
                 useCoverageFill || !measured ? "transparent" : "#FDA702"
               }
-              strokeWidth={letter.strokeWidth}
+              strokeWidth={letter.strokeWidth * ORANGE_STROKE_SCALE}
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeDasharray={useCoverageFill || !measured ? undefined : length}
@@ -324,7 +350,7 @@ export function LetterStroke({
                 d={d}
                 fill="none"
                 stroke="#FDA702"
-                strokeWidth={letter.strokeWidth}
+                strokeWidth={letter.strokeWidth * ORANGE_STROKE_SCALE}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 pointerEvents="none"

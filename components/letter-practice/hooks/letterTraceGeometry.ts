@@ -13,6 +13,14 @@ export function samplePathPoints(
 ): Point[] {
   const length = path.getTotalLength();
   if (length <= 0) return [];
+  // Pin-prick strokes (e.g. the dot on “i”) are ~0 length. Sampling them
+  // dozens of times piles identical points at one spot, but coverage only
+  // marks a small index brush — so a correct tap never reaches the threshold.
+  // One sample makes a single hit count as complete.
+  if (length < 1) {
+    const pt = path.getPointAtLength(0);
+    return [{ x: pt.x, y: pt.y }];
+  }
   const points: Point[] = [];
   for (let i = 0; i < sampleCount; i++) {
     const pt = path.getPointAtLength((i / (sampleCount - 1)) * length);

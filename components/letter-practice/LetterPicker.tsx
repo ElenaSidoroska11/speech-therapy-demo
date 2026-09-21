@@ -2,7 +2,7 @@ import { AVAILABLE_LETTERS, getLetter, type LetterId } from "./letters";
 import { LetterGlyphPreview } from "./LetterGlyphPreview";
 
 const SIDEBAR_BUTTON =
-  "flex w-full items-center justify-center rounded-2xl ring-2 transition";
+  "flex w-full items-center justify-center rounded-xl ring-2 transition";
 
 type LetterPickerProps = {
   letterId?: LetterId;
@@ -29,14 +29,14 @@ function LetterPickerContent({
 
   if (display === "glyph") {
     return (
-      <span className="inline-flex h-7 w-7 items-center justify-center">
+      <span className="inline-flex h-6 w-6 items-center justify-center">
         <LetterGlyphPreview letter={letter} stroke={glyphStroke} className="h-full w-full" />
       </span>
     );
   }
 
   return (
-    <span className="text-2xl font-extrabold">
+    <span className="text-xl font-extrabold leading-none">
       {letter.letter}
     </span>
   );
@@ -62,7 +62,7 @@ export function LetterPicker({
   return (
     <div
       className={`w-full shrink-0 ${
-        sidebar ? "grid grid-cols-4 gap-2" : "flex flex-wrap justify-center gap-2"
+        sidebar ? "grid grid-cols-5 gap-2" : "flex flex-wrap justify-center gap-2"
       } ${className}`}>
       {letters.map((id) =>
         disabled ? (
@@ -71,7 +71,7 @@ export function LetterPicker({
             aria-disabled="true"
             className={`${
               sidebar
-                ? `${SIDEBAR_BUTTON} py-2`
+                ? `${SIDEBAR_BUTTON} aspect-square p-1.5`
                 : "rounded-xl px-3 py-1.5 text-sm font-extrabold ring-2"
             } cursor-default bg-white/70 text-[#FDA702] ring-white/50`}>
             <LetterPickerContent id={id} display={display} selected={false} />
@@ -83,7 +83,7 @@ export function LetterPicker({
             onClick={() => onSelect?.(id)}
             className={`${
               sidebar
-                ? `${SIDEBAR_BUTTON} py-2`
+                ? `${SIDEBAR_BUTTON} aspect-square p-1.5`
                 : "rounded-xl px-3 py-1.5 text-sm font-extrabold ring-2 transition"
             } ${
               id === letterId
@@ -102,7 +102,7 @@ export function LetterPicker({
         <div
           key={`placeholder-${i}`}
           aria-hidden
-          className={`${SIDEBAR_BUTTON} bg-white/30 text-transparent ring-white/30`}
+          className={`${SIDEBAR_BUTTON} aspect-square bg-white/30 text-transparent ring-white/30`}
         />
       ))}
     </div>

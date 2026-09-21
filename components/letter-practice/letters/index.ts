@@ -1,12 +1,33 @@
 import type { LetterDefinition } from "./types";
 // import { letterCh } from "./letterCh";
 import { letterA } from "./letterA";
+import { letterLowerB } from "./letterLowerB";
 import { letterC } from "./letterC";
+import { letterLowerD } from "./letterLowerD";
+
+import { letterLowerE } from "./letterLowerE";
+import { letterLowerF } from "./letterLowerF";
+import { letterLowerG } from "./letterLowerG";
 // import { letterL } from "./letterL";
 import { letterLowerH } from "./letterLowerH";
-// import { letterLowerM } from "./letterLowerM";
+import { letterLowerI } from "./letterLowerI";
+import { letterLowerJ } from "./letterLowerJ";
+import { letterLowerK } from "./letterLowerK";
+import { letterLowerL } from "./letterLowerL";
+import { letterLowerM } from "./letterLowerM";
+import { letterLowerN } from "./letterLowerN";
+import { letterLowerO } from "./letterLowerO";
+import { letterLowerP } from "./letterLowerP";
+import { letterLowerQ } from "./letterLowerQ";
+import { letterLowerR } from "./letterLowerR";
 import { letterLowerS } from "./letterLowerS";
-// import { letterLowerY } from "./letterLowerY";
+import { letterLowerT } from "./letterLowerT";
+import { letterLowerU } from "./letterLowerU";
+import { letterLowerV } from "./letterLowerV";
+import { letterLowerW } from "./letterLowerW";
+import { letterLowerX } from "./letterLowerX";
+import { letterLowerY } from "./letterLowerY";
+import { letterLowerZ } from "./letterLowerZ";
 // import { letterM } from "./letterM";
 // import { letterS } from "./letterS";
 // import { letterSh } from "./letterSh";
@@ -18,15 +39,35 @@ import { letterLowerS } from "./letterLowerS";
  * To add one: create `letterX.ts`, extend `LetterId`, and register it here.
  *
  * Order drives the letter picker and “Next” navigation.
- * Currently active: a, c, h, s (others commented out for later).
+ * Currently active: a, b, c, d, h, s (others commented out for later).
  */
 export const LETTERS = {
   a: letterA,
+  b: letterLowerB,
   c: letterC,
+  d: letterLowerD,
+  e: letterLowerE,
+  f: letterLowerF,
+  g: letterLowerG,
   h: letterLowerH,
+  i: letterLowerI,
+  j: letterLowerJ,
+  k: letterLowerK,
+  l: letterLowerL,
+  m: letterLowerM,
+  n: letterLowerN,
+  o: letterLowerO,
+  p: letterLowerP,
+  q: letterLowerQ,
+  r: letterLowerR,
   s: letterLowerS,
-  // m: letterLowerM,
-  // y: letterLowerY,
+  t: letterLowerT,
+  u: letterLowerU,
+  v: letterLowerV,
+  w: letterLowerW,
+  x: letterLowerX,
+  y: letterLowerY,
+  z: letterLowerZ,
   // S: letterS,
   // M: letterM,
   // L: letterL,
@@ -36,7 +77,7 @@ export const LETTERS = {
   // wh: letterWh,
 } as const satisfies Record<string, LetterDefinition>;
 
-/** Only ids present in `LETTERS` (currently `a`, `c`, `h`, and `s`). */
+/** Only ids present in `LETTERS` (currently `a`, `b`, `c`, `d`, `h`, and `s`). */
 export type ActiveLetterId = keyof typeof LETTERS;
 
 export const AVAILABLE_LETTERS = Object.keys(LETTERS) as ActiveLetterId[];

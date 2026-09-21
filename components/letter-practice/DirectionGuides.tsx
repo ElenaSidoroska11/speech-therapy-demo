@@ -20,7 +20,9 @@ function startDotPoint(el: SVGPathElement, length: number) {
   const step = Math.min(10, Math.max(3, length * 0.015));
   const next = el.getPointAtLength(step);
   const angle = Math.atan2(next.y - start.y, next.x - start.x);
-  const offset = Math.min(18, Math.max(12, length * 0.04));
+  // Keep the offset small so tall letters (h, b, d) don’t place the
+  // dot above the topline / outside the writing band.
+  const offset = Math.min(6, Math.max(3, length * 0.012));
   return {
     x: start.x - Math.cos(angle) * offset,
     y: start.y - Math.sin(angle) * offset,
