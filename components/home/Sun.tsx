@@ -6,7 +6,7 @@ export function Sun() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute right-10 top-2 z-30 sm:right-16 sm:top-4 md:right-24 md:top-5"
+      className="pointer-events-none absolute right-1 top-2 z-30 sm:right-0 sm:top-4 md:-right-1 md:top-5"
       initial={{ opacity: 0, scale: 0.7 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.1 }}

@@ -47,7 +47,7 @@ import { HomeScene } from "@/components/home/HomeScene";
 
 function HeroPhoto() {
   return (
-    <div className={CENTER_CONTENT_WIDTH}>
+    <div className="relative w-full max-w-md sm:max-w-xl md:max-w-3xl">
       <motion.div
         initial={{ opacity: 0, y: 20, scale: 0.96 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -60,7 +60,7 @@ function HeroPhoto() {
             fill
             priority
             className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, 768px"
+            sizes="(max-width: 640px) 28rem, (max-width: 768px) 36rem, 48rem"
           />
           <div
             aria-hidden
@@ -75,7 +75,7 @@ function HeroPhoto() {
 export { HomeScene };
 
 export const CENTER_TITLE_SLOT =
-  "relative z-20 max-w-xl justify-self-center px-4 text-center sm:max-w-2xl sm:px-6 md:col-start-2 md:row-start-1 md:max-w-none";
+  "relative z-20 max-w-xl  px-4 text-center sm:max-w-2xl sm:px-6 md:col-start-2 md:row-start-1 md:max-w-none";
 
 export const CENTER_BODY_SLOT =
   "relative flex flex-col items-center justify-center gap-4 px-4 sm:gap-5 sm:px-6 md:col-start-2 md:row-start-2 md:px-2";
@@ -86,7 +86,7 @@ export const CENTER_CONTENT_WIDTH = "relative w-full max-w-md sm:max-w-xl md:max
 export function HomeTitleHeightSpacer() {
   return (
     <div aria-hidden className="pointer-events-none invisible">
-      <h1 className="truncate font-(family-name:--font-display) text-xl font-bold leading-tight tracking-tight sm:text-3xl md:text-5xl">
+      <h1 className="truncate font-(family-name:--font-display) text-lg font-bold leading-tight tracking-tight sm:text-2xl md:text-4xl">
         &apos;Literacy Made Easy&apos; Digital Program
       </h1>
       <p className="mt-2 font-(family-name:--font-display) text-2xl font-extrabold tracking-wide sm:mt-3 sm:text-4xl md:text-5xl">
@@ -104,9 +104,9 @@ export function HomeLanding() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
         className={CENTER_TITLE_SLOT}>
-        <h1 className="truncate font-(family-name:--font-display) text-xl font-bold leading-tight tracking-tight text-white drop-shadow-[0_3px_0_rgba(15,118,110,0.25)] sm:text-3xl md:text-5xl">
+        <p className="truncate font-(family-name:--font-display) text-xl font-bold leading-tight tracking-tight text-white drop-shadow-[0_3px_0_rgba(15,118,110,0.25)] sm:text-3xl md:text-5xl">
           &apos;Literacy Made Easy&apos; Digital Program
-        </h1>
+        </p>
         <p className="mt-2 font-(family-name:--font-display) text-2xl font-extrabold tracking-wide text-[#e52328] drop-shadow-[0_2px_0_rgba(15,118,110,0.25)] sm:mt-3 sm:text-4xl md:text-5xl">
           LETTER SOUNDS
         </p>

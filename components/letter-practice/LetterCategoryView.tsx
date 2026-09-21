@@ -23,8 +23,8 @@ function StyleCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full max-w-2xl rounded-4xl bg-white/55 p-3.5 pt-4 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm sm:p-5 sm:pt-5">
-      <h2 className="mb-3.5 text-center font-(family-name:--font-display) text-xl font-extrabold tracking-wide text-[#e52328] drop-shadow-[0_2px_0_rgba(15,118,110,0.25)] sm:mb-4 sm:text-2xl md:text-3xl">
+    <div className="w-full max-w-3xl rounded-4xl bg-white/55 p-3 pt-3.5 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm sm:max-w-4xl sm:p-4 sm:pt-4">
+      <h2 className="mb-2.5 text-center font-(family-name:--font-display) text-xl font-extrabold tracking-wide text-[#e52328] drop-shadow-[0_2px_0_rgba(15,118,110,0.25)] sm:mb-3 sm:text-2xl md:text-3xl">
         {title}
       </h2>
       {children}
@@ -52,25 +52,21 @@ export function LetterCategoryView({ style, onSelectLetter }: LetterCategoryView
       </div>
 
       <div className={CENTER_BODY_SLOT}>
-        <div className={CENTER_CONTENT_WIDTH}>
-          <div className="relative">
-            <div className="relative aspect-16/10 w-full min-h-48 sm:min-h-0">
-              <div className="absolute inset-0 flex min-h-0 items-start justify-center">
-                {style && styleLabel ? (
-                  <StyleCard title={styleLabel}>
-                    {style === "victorian" ? (
-                      <LetterPicker
-                        variant="sidebar"
-                        display="glyph"
-                        onSelect={onSelectLetter}
-                      />
-                    ) : (
-                      <LetterPicker variant="sidebar" disabled />
-                    )}
-                  </StyleCard>
-                ) : null}
-              </div>
-            </div>
+        <div className={`${CENTER_CONTENT_WIDTH} max-w-3xl sm:max-w-4xl md:max-w-4xl`}>
+          <div className="flex w-full items-start">
+            {style && styleLabel ? (
+              <StyleCard title={styleLabel}>
+                {style === "victorian" ? (
+                  <LetterPicker
+                    variant="panel"
+                    display="glyph"
+                    onSelect={onSelectLetter}
+                  />
+                ) : (
+                  <LetterPicker variant="panel" disabled />
+                )}
+              </StyleCard>
+            ) : null}
           </div>
         </div>
       </div>

@@ -182,7 +182,7 @@ export function BrandSidebar({
 }) {
   return (
     <div
-      className={`hidden min-h-0 self-start md:col-start-1 md:row-start-1 md:flex md:flex-col md:items-center ${className}`}>
+      className={`hidden min-h-0 self-start md:col-start-1 md:row-start-1 md:mt-5 md:flex md:flex-col md:items-center ${className}`}>
       <ClinicLogo
         priority
         className="mb-3 h-auto w-56 -translate-y-4 object-contain md:w-64 md:-translate-y-6"

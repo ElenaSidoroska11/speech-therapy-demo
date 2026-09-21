@@ -7,7 +7,7 @@ const SIDEBAR_BUTTON =
 type LetterPickerProps = {
   letterId?: LetterId;
   onSelect?: (id: LetterId) => void;
-  variant?: "compact" | "sidebar";
+  variant?: "compact" | "sidebar" | "panel";
   className?: string;
   letters?: LetterId[];
   placeholderCount?: number;
@@ -19,28 +19,42 @@ function LetterPickerContent({
   id,
   display,
   selected,
+  dense,
 }: {
   id: LetterId;
   display: "text" | "glyph";
   selected: boolean;
+  dense?: boolean;
 }) {
   const letter = getLetter(id);
   const glyphStroke = selected ? "#FFFFFF" : "#FDA702";
 
   if (display === "glyph") {
     return (
-      <span className="inline-flex h-6 w-6 items-center justify-center">
+      <span
+        className={`inline-flex items-center justify-center ${
+          dense ? "h-7 w-7 sm:h-8 sm:w-8" : "h-6 w-6"
+        }`}>
         <LetterGlyphPreview letter={letter} stroke={glyphStroke} className="h-full w-full" />
       </span>
     );
   }
 
   return (
-    <span className="text-xl font-extrabold leading-none">
+    <span
+      className={`font-extrabold leading-none ${
+        dense ? "text-xl sm:text-2xl" : "text-xl"
+      }`}>
       {letter.letter}
     </span>
   );
 }
+
+const GRID_BY_VARIANT = {
+  sidebar: "grid grid-cols-5 gap-2",
+  // Wider panel: more letters per row so the card stays shorter on screen
+  panel: "grid grid-cols-6 gap-1.5 sm:grid-cols-7 sm:gap-2 md:grid-cols-9",
+} as const;
 
 export function LetterPicker({
   letterId,
@@ -52,17 +66,18 @@ export function LetterPicker({
   disabled = false,
   display = "text",
 }: LetterPickerProps) {
-  const sidebar = variant === "sidebar";
+  const tiled = variant === "sidebar" || variant === "panel";
+  const dense = variant === "panel";
   const hasLetters = letters.length > 0;
   const hasPlaceholders = placeholderCount > 0;
 
   if (!hasLetters && !hasPlaceholders) return null;
-  if (!sidebar && letters.length <= 1 && !hasPlaceholders) return null;
+  if (!tiled && letters.length <= 1 && !hasPlaceholders) return null;
 
   return (
     <div
       className={`w-full shrink-0 ${
-        sidebar ? "grid grid-cols-5 gap-2" : "flex flex-wrap justify-center gap-2"
+        tiled ? GRID_BY_VARIANT[variant] : "flex flex-wrap justify-center gap-2"
       } ${className}`}>
       {letters.map((id) =>
         disabled ? (
@@ -70,11 +85,16 @@ export function LetterPicker({
             key={id}
             aria-disabled="true"
             className={`${
-              sidebar
-                ? `${SIDEBAR_BUTTON} aspect-square p-1.5`
+              tiled
+                ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
                 : "rounded-xl px-3 py-1.5 text-sm font-extrabold ring-2"
             } cursor-default bg-white/70 text-[#FDA702] ring-white/50`}>
-            <LetterPickerContent id={id} display={display} selected={false} />
+            <LetterPickerContent
+              id={id}
+              display={display}
+              selected={false}
+              dense={dense}
+            />
           </div>
         ) : (
           <button
@@ -82,8 +102,8 @@ export function LetterPicker({
             type="button"
             onClick={() => onSelect?.(id)}
             className={`${
-              sidebar
-                ? `${SIDEBAR_BUTTON} aspect-square p-1.5`
+              tiled
+                ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
                 : "rounded-xl px-3 py-1.5 text-sm font-extrabold ring-2 transition"
             } ${
               id === letterId
@@ -94,6 +114,7 @@ export function LetterPicker({
               id={id}
               display={display}
               selected={id === letterId}
+              dense={dense}
             />
           </button>
         ),
