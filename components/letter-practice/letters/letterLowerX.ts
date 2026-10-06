@@ -44,40 +44,41 @@ export const letterLowerX: LetterDefinition = {
   strokePaths: [
     [
       // Stroke 1 — start on the left
-      "M 91 181",
+      "M 91 178",
 
       // Curve upward and right toward the top
-      "C 102 167 113 160 124 161",
+      "C 102 162.7 113 155 124 156.1",
 
       // Rounded top arch
-      "C 137 161 143 171 142 185",
+      "C 137 156.1 143 167.1 142 182.4",
 
       // Bend downward through the centre
-      "C 141 203 131 220 118 230",
+      "C 141 202.2 131 220.9 118 231.8",
 
       // Sweep left toward the baseline
-      "C 105 240 91 242 77 238",
+      "C 105 242.8 91 245 77 240.6",
     ].join(" "),
 
     [
       // Stroke 2 — start at upper-right
-      "M 174 169",
+      "M 174 164.9",
 
       // Curve left/inward from the top
-      "C 161 166 151 172 146 184",
+      "C 161 161.6 151 168.2 146 181.3",
 
       // Descend through the centre
-      "C 140 197 138 216 139 228",
+      "C 140 195.6 138 216.5 139 229.6",
 
       // Rounded bottom turn at the baseline
-      "C 140 238 146 242 154 239",
+      "C 140 240.6 146 245 154 241.7",
 
       // Sweep upward/right into the exit
-      "C 163 235 171 225 180 215",
+      "C 163 237.3 171 226.3 180 215.4",
     ].join(" "),
   ],
 
   strokeWidth: 21,
+  previewScale: 0.7,
 
   traceTolerance: 20,
 

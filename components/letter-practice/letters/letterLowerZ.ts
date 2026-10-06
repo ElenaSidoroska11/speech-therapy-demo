@@ -45,42 +45,42 @@ export const letterLowerZ: LetterDefinition = {
   strokePaths: [
     [
       // Stroke 1 — start at upper-left
-      "M 94 181",
+      "M 94 175.4",
 
       // Curve upward toward x-height
-      "C 103 169 113 163 123 164",
+      "C 103 162.8 113 156.5 123 157.6",
 
       // Rounded top arch
-      "C 135 165 140 175 138 188",
+      "C 135 158.6 140 169.1 138 182.8",
 
       // Curve downward through the centre
-      "C 136 202 129 216 121 229",
+      "C 136 197.5 129 212.2 121 225.8",
 
       // Finish around the normal baseline
-      "C 118 234 115 237 112 239",
+      "C 118 231.1 115 234.2 112 236.3",
     ].join(" "),
 
     [
       // Stroke 2 — begin around the middle/baseline
-      "M 112 239",
+      "M 112 236.3",
 
       // Rise right to create the rounded hump
-      "C 120 226 128 219 137 219",
+      "C 120 222.7 128 215.3 137 215.3",
 
       // Round over the top-right of the hump
-      "C 148 219 154 227 154 240",
+      "C 148 215.3 154 223.7 154 237.4",
 
       // Descend through the baseline
-      "C 154 257 153 278 151 296",
+      "C 154 255.3 153 277.3 151 296.2",
 
       // Continue deep into descender area
-      "C 149 312 145 324 137 331",
+      "C 149 313 145 325.6 137 333",
 
       // Round the bottom smoothly
-      "C 129 338 117 341 104 340",
+      "C 129 340.3 117 343.5 104 342.4",
 
       // Long left-facing finishing sweep
-      "C 92 340 81 337 72 333",
+      "C 92 342.4 81 339.3 72 335.1",
     ].join(" "),
   ],
 

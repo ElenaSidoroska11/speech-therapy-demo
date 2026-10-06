@@ -1,13 +1,15 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CelebrationBurst } from "@/components/shared/CelebrationBurst";
 import { playSoftError } from "@/components/shared/sounds";
-import { LetterPicker } from "./LetterPicker";
 import { TraceExerciseHeader } from "./TraceExerciseHeader";
 import { TraceExerciseWorkspace } from "./TraceExerciseWorkspace";
 import { useLetterDemo } from "./hooks/useLetterDemo";
-import { useLetterTrace } from "./hooks/useLetterTrace";
+import {
+  ERROR_PULSE_TOTAL_MS,
+  useLetterTrace,
+} from "./hooks/useLetterTrace";
 import { getLetter, getNextLetter, type LetterId } from "./letters";
 import {
   CENTER_BODY_SLOT,
@@ -23,7 +25,7 @@ type TraceLetterExerciseProps = {
 };
 
 export function TraceLetterExercise({
-  initialLetter = "s",
+  initialLetter = "a",
   onNextLetter,
   layout = "stacked",
 }: TraceLetterExerciseProps) {
@@ -34,6 +36,7 @@ export function TraceLetterExercise({
   const letter = getLetter(letterId);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const errorPulseClearTimerRef = useRef<number | null>(null);
   const { demoProgress, handleDemoMeasured, replayDemo } = useLetterDemo(
     letterId,
     letter.phonemeSound,
@@ -43,9 +46,38 @@ export function TraceLetterExercise({
     setCelebrate(true);
   }, []);
 
+  const clearErrorPulse = useCallback(() => {
+    if (errorPulseClearTimerRef.current != null) {
+      window.clearTimeout(errorPulseClearTimerRef.current);
+      errorPulseClearTimerRef.current = null;
+    }
+    setErrorPulse(0);
+  }, []);
+
   const handleOffPath = useCallback(() => {
     playSoftError();
     setErrorPulse((n) => n + 1);
+    if (errorPulseClearTimerRef.current != null) {
+      window.clearTimeout(errorPulseClearTimerRef.current);
+    }
+    // Stop treating the stroke as "in error" once jumps finish, so a new
+    // draw does not replay the jump animation.
+    errorPulseClearTimerRef.current = window.setTimeout(() => {
+      errorPulseClearTimerRef.current = null;
+      setErrorPulse(0);
+    }, ERROR_PULSE_TOTAL_MS);
+  }, []);
+
+  const handleStrokeStart = useCallback(() => {
+    clearErrorPulse();
+  }, [clearErrorPulse]);
+
+  useEffect(() => {
+    return () => {
+      if (errorPulseClearTimerRef.current != null) {
+        window.clearTimeout(errorPulseClearTimerRef.current);
+      }
+    };
   }, []);
 
   const {
@@ -67,6 +99,7 @@ export function TraceLetterExercise({
     enabled: true,
     onComplete: handleComplete,
     onOffPath: handleOffPath,
+    onStrokeStart: handleStrokeStart,
   });
 
   const clearTrace = () => {
@@ -84,13 +117,7 @@ export function TraceLetterExercise({
   const nextLetter = getNextLetter(letterId);
   const wideLetter = letter.letter.length > 1;
 
-  const header = (
-    <TraceExerciseHeader
-      letter={letter}
-      letterId={letterId}
-      onSelectLetter={selectLetter}
-    />
-  );
+  const header = <TraceExerciseHeader letter={letter} />;
 
   const workspace = (
     <TraceExerciseWorkspace
@@ -123,19 +150,22 @@ export function TraceLetterExercise({
   if (layout === "landing") {
     return (
       <>
-        <div className={`${CENTER_TITLE_SLOT} relative flex flex-col items-center justify-center`}>
-          <HomeTitleHeightSpacer />
-          <div className="absolute inset-x-4 top-1/2 flex -translate-y-1/2 flex-col items-center gap-3 sm:inset-x-6 sm:gap-4">
+        <div
+          className={`${CENTER_TITLE_SLOT} relative flex flex-col items-center gap-3 md:justify-center`}>
+          <div className="hidden md:block">
+            <HomeTitleHeightSpacer />
+          </div>
+          <div className="relative z-20 flex w-full flex-col items-center gap-3 px-1 md:absolute md:inset-x-4 md:top-1/2 md:-translate-y-1/2 md:gap-4 md:px-0 lg:inset-x-6">
             {header}
           </div>
         </div>
 
         <div className={CENTER_BODY_SLOT}>
-          <div className={CENTER_CONTENT_WIDTH}>
-            <div className="relative p-2 sm:p-3 md:p-4">
+          <div className={`${CENTER_CONTENT_WIDTH} max-w-lg sm:max-w-2xl md:max-w-none`}>
+            <div className="relative flex min-h-0 flex-1 flex-col p-1 sm:p-3 md:p-4">
               {celebrate && <CelebrationBurst />}
-              <div className="relative z-10 aspect-16/10 w-full min-h-48 sm:min-h-0">
-                <div className="absolute inset-0 flex min-h-0 flex-col gap-2 sm:gap-3">
+              <div className="relative z-10 flex min-h-0 w-full flex-1 flex-col md:aspect-16/10 md:flex-none">
+                <div className="flex min-h-0 flex-1 flex-col gap-3 md:absolute md:inset-0">
                   {workspace}
                 </div>
               </div>
@@ -151,7 +181,6 @@ export function TraceLetterExercise({
       {celebrate && <CelebrationBurst />}
       <div className="relative z-10 flex min-h-0 w-full flex-1 flex-col items-center gap-3 sm:gap-4">
         {header}
-        <LetterPicker letterId={letterId} onSelect={selectLetter} />
         {workspace}
       </div>
     </section>

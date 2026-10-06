@@ -1,4 +1,4 @@
-import { AVAILABLE_LETTERS, getLetter, type LetterId } from "./letters";
+import { AVAILABLE_LETTERS, getLetter, isSelectableLetter, type LetterId } from "./letters";
 import { LetterGlyphPreview } from "./LetterGlyphPreview";
 
 const SIDEBAR_BUTTON =
@@ -33,7 +33,7 @@ function LetterPickerContent({
     return (
       <span
         className={`inline-flex items-center justify-center ${
-          dense ? "h-7 w-7 sm:h-8 sm:w-8" : "h-6 w-6"
+          dense ? "h-9 w-9 sm:h-11 sm:w-11" : "h-6 w-6"
         }`}>
         <LetterGlyphPreview letter={letter} stroke={glyphStroke} className="h-full w-full" />
       </span>
@@ -43,7 +43,7 @@ function LetterPickerContent({
   return (
     <span
       className={`font-extrabold leading-none ${
-        dense ? "text-xl sm:text-2xl" : "text-xl"
+        dense ? "text-2xl sm:text-3xl" : "text-xl"
       }`}>
       {letter.letter}
     </span>
@@ -79,46 +79,46 @@ export function LetterPicker({
       className={`w-full shrink-0 ${
         tiled ? GRID_BY_VARIANT[variant] : "flex flex-wrap justify-center gap-2"
       } ${className}`}>
-      {letters.map((id) =>
-        disabled ? (
-          <div
-            key={id}
-            aria-disabled="true"
-            className={`${
-              tiled
-                ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
-                : "rounded-xl px-3 py-1.5 text-sm font-extrabold ring-2"
-            } cursor-default bg-white/70 text-[#FDA702] ring-white/50`}>
-            <LetterPickerContent
-              id={id}
-              display={display}
-              selected={false}
-              dense={dense}
-            />
-          </div>
-        ) : (
+      {letters.map((id) => {
+        const enabled = !disabled && isSelectableLetter(id);
+        const selected = enabled && id === letterId;
+        const shape = tiled
+          ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
+          : "rounded-xl px-2.5 py-1 text-sm font-extrabold ring-2";
+        const content = (
+          <LetterPickerContent
+            id={id}
+            display={display}
+            selected={selected}
+            dense={dense}
+          />
+        );
+
+        if (!enabled) {
+          return (
+            <div
+              key={id}
+              aria-disabled="true"
+              className={`${shape} cursor-default bg-[#B9E3F2] text-[#FDA702] ring-[#78C4E3]`}>
+              {content}
+            </div>
+          );
+        }
+
+        return (
           <button
             key={id}
             type="button"
             onClick={() => onSelect?.(id)}
-            className={`${
-              tiled
-                ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
-                : "rounded-xl px-3 py-1.5 text-sm font-extrabold ring-2 transition"
-            } ${
-              id === letterId
+            className={`${shape} ${
+              selected
                 ? "bg-[#FDA702] text-white ring-white/70"
-                : "bg-white/70 text-[#FDA702] ring-white/50 hover:bg-white"
+                : "bg-[#B9E3F2] text-[#FDA702] ring-[#78C4E3] hover:bg-[#A5DAEE]"
             }`}>
-            <LetterPickerContent
-              id={id}
-              display={display}
-              selected={id === letterId}
-              dense={dense}
-            />
+            {content}
           </button>
-        ),
-      )}
+        );
+      })}
       {Array.from({ length: placeholderCount }, (_, i) => (
         <div
           key={`placeholder-${i}`}

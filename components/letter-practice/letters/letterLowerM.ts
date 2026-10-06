@@ -8,23 +8,19 @@ import {
 /**
  * Victoria Modern Script lowercase m — one continuous stroke.
  *
- * Spans line 2 (x-height) → line 3 (baseline):
+ * Straight / upright version.
  *
- * 1. Start near x-height.
- * 2. Small entry under line 2.
- * 3. First downstroke to the baseline.
- * 4. Rise into the first rounded hump (line 2).
- * 5. Descend to the baseline.
- * 6. Rise into the second rounded hump (line 2).
- * 7. Descend to the baseline.
- * 8. Finish with an upward/right exit tail.
+ * Three rounded upright arches.
  *
- * Reference arrows:
- * 1 = first arch / first downstroke
- * 2 = second arch
- * 3 = third arch / exit section
+ * Each main downstroke is vertical with no left/right slant.
+ * The rounded tops and spacing between the three sections
+ * are preserved.
+ *
+ * Final tail:
+ * - stays aligned with line 3
+ * - smooth rounded bottom
+ * - short gradual upward/right finish
  */
-
 export const letterLowerM: LetterDefinition = {
   id: "m",
 
@@ -47,47 +43,74 @@ export const letterLowerM: LetterDefinition = {
 
   strokePaths: [
     [
-      // Start on x-height / line 2
-      "M 48 168",
+      // =====================================================
+      // 1 — FIRST SECTION
+      // =====================================================
 
-      // Small entry — stay under line 2
-      "C 56 162 66 160 76 164",
+      "M 46 165",
 
-      // First rounded top under line 2
-      "C 84 168 86 176 84 186",
+      // Smooth approach to first top
+      "C 52 160 59 157 66 157",
 
-      // FIRST DOWNSTROKE to baseline (line 3)
-      "C 80 200 74 218 68 234",
+      // First rounded top
+      "C 74 157 79 164 79 175",
 
-      // Rise into FIRST HUMP
-      "C 74 218 82 190 94 172",
+      // Straight / upright first downstroke
+      "C 79 194 79 217 79 236",
 
-      // Rounded top of first hump (line 2)
-      "C 102 164 114 160 126 164",
 
-      // Descend from first hump
-      "C 138 168 138 180 134 194",
+      // =====================================================
+      // 2 — SECOND SECTION
+      // =====================================================
 
-      // SECOND DOWNSTROKE to baseline
-      "C 130 210 124 224 118 234",
+      // Rise toward second arch
+      "C 79 215 84 190 97 171",
 
-      // Rise into SECOND HUMP
-      "C 124 218 132 190 144 172",
+      // Smooth approach to second top
+      "C 104 161 111 157 119 157",
 
-      // Rounded top of second hump (line 2)
-      "C 152 164 164 160 174 164",
+      // Second rounded top
+      "C 128 157 134 164 134 175",
 
-      // Round over the top
-      "C 184 168 186 180 182 194",
+      // Straight / upright second downstroke
+      "C 134 194 134 217 134 236",
 
-      // THIRD DOWNSTROKE to baseline
-      "C 178 210 172 224 168 234",
 
-      // Bottom turn on baseline
-      "C 166 240 172 242 178 240",
+      // =====================================================
+      // 3 — THIRD SECTION
+      // =====================================================
 
-      // Short exit tail — upward/right
-      "C 186 236 194 228 200 220",
+      // Rise toward third arch
+      "C 134 215 140 190 153 171",
+
+      // Smooth approach to third top
+      "C 160 161 167 157 175 157",
+
+      // Third rounded top
+      "C 184 157 190 164 190 175",
+
+      // Straight / upright third downstroke
+      "C 190 193 190 210 190 224",
+
+
+      // =====================================================
+      // FINAL TAIL — SMOOTH + ALIGNED WITH LINE 3
+      // =====================================================
+
+      // Continue vertically toward baseline
+      "C 190 229 190 233 193 235",
+
+      // Wide smooth rounded bottom
+      "C 196 238 201 238 206 235",
+
+      // Smooth transition toward the right
+      "C 211 232 215 228 219 223",
+
+      // Gradual upward/right exit
+      "C 223 218 226 213 229 209",
+
+      // Short smooth finish
+      "C 230 207 231 206 232 204",
     ].join(" "),
   ],
 
@@ -97,8 +120,5 @@ export const letterLowerM: LetterDefinition = {
 
   traceCoverage: 0.99,
 
-  // 1 = first section
-  // 2 = first hump
-  // 3 = second hump
-  directionArrowFractions: [0.08, 0.38, 0.68],
+  directionArrowFractions: [0.08, 0.39, 0.69],
 };

@@ -1,19 +1,16 @@
 import type { LetterDefinition } from "./types";
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
- * Cursive (Victoria Modern Script) lowercase f — two strokes.
+ * Victoria Modern Script lowercase f — two strokes.
  *
- * Stroke 1:
- * Starts at the blue dot near the top/ascender line.
- * Curves left into the tall stem and travels downward
- * through the baseline to the descender line.
- *
- * Stroke 2:
- * Crossbar on the midline — starts left of the stem and
- * sweeps right/upward across it.
- *
- * Spans topline (line 1) → bottomline (line 4).
+ * Client-adjusted version:
+ * - Main stem is straight / vertical.
+ * - Crossbar is straight / horizontal.
+ * - Keeps the rounded top of the lowercase f.
  */
 export const letterLowerF: LetterDefinition = {
   id: "f",
@@ -39,38 +36,30 @@ export const letterLowerF: LetterDefinition = {
     /**
      * STROKE 1
      *
-     * Blue dot → curve left → tall stem → descender (line 4).
+     * Rounded top → straight vertical stem → descender.
      */
     [
-      // Start at blue dot
-      "M 167.8 72.2",
+      // Start at the upper-right
+      "M 157 65.5",
 
-      // Rounded top moving left
-      "C 149.1 66 130.5 70.4 118.9 83.8",
+      // Rounded top of the f
+      "C 142 59 125 63 116 77",
 
-      // Curve into the tall stem
-      "C 106.4 98.9 102 122 98.4 147.8",
+      // Smoothly enter the vertical stem
+      "C 108 89 106 105 106 125",
 
-      // Continue down through x-height / baseline
-      "C 94.9 176.3 90.4 210.1 86 243",
-
-      // Reach the descender line
-      "C 82.4 271.5 78 302.6 73.5 332",
+      // Straight vertical section
+      "L 106 339",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Crossbar just below the midline (line 2).
+     * Completely straight horizontal crossbar.
      */
     [
-      "M 68.2 198.3",
-
-      // Approach/cross the stem
-      "C 85.1 194.7 102.9 190.3 119.8 185",
-
-      // Finish slightly higher on the right
-      "C 131.3 181.4 142 177.8 150.9 174.3",
+      "M 67 186",
+      "L 151 186",
     ].join(" "),
   ],
 
@@ -79,7 +68,5 @@ export const letterLowerF: LetterDefinition = {
   traceTolerance: 36,
   traceCoverage: 0.99,
 
-  // Arrow 1 = downward main stroke
-  // Arrow 2 = cross stroke
   directionArrowFractions: [0.12, 0.15],
 };

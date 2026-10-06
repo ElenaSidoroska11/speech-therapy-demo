@@ -1,82 +1,97 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase n — one continuous stroke.
  *
- * Spans line 2 (x-height) → line 3 (baseline):
+ * Straight / upright version.
  *
- * 1. Start near x-height.
- * 2. Small entry under line 2 into the first hump.
- * 3. Descend to the baseline.
- * 4. Rise into the second rounded hump (line 2).
- * 5. Descend to the baseline.
- * 6. Finish with a short upward/right exit tail.
+ * Two rounded arches.
+ * Both downstrokes are straight / vertical with no slant.
  *
- * Reference:
- * 1 = first hump
- * 2 = second hump
- * 3 = exit tail
+ * The exit tail stays on step 2.
  */
-
 export const letterLowerN: LetterDefinition = {
   id: "n",
-
   letter: "n",
 
   spokenName: "the letter N",
 
-  acceptTranscripts: ["n", "en", "letter n", "the letter n"],
+  acceptTranscripts: [
+    "n",
+    "en",
+    "letter n",
+    "the letter n",
+  ],
 
   viewBox: LOWERCASE_ARTBOARD.viewBox,
-
   fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
 
   rulingLines: lowercaseRulingLines(),
 
   strokePaths: [
     [
-      // Start on x-height / line 2
-      "M 56 168",
+      // =====================================================
+      // 1 — FIRST SECTION
+      // =====================================================
 
-      // Small entry — stay under line 2
-      "C 64 162 74 160 84 164",
+      "M 52 164",
 
-      // Rounded top of first hump (line 2)
-      "C 94 168 98 176 96 186",
+      // Smooth beginning toward first top
+      "C 59 159 66 157 73 157",
 
-      // Descend to baseline (line 3)
-      "C 92 200 84 218 78 234",
+      // First rounded top
+      "C 82 157 87 165 87 176",
 
-      // Rise into the second hump
-      "C 82 218 90 190 102 172",
+      // Straight vertical first downstroke
+      "C 87 193 87 217 87 236",
 
-      // Rounded top of second hump (line 2)
-      "C 110 164 122 160 134 164",
 
-      // Continue over the rounded second hump
-      "C 146 168 150 178 148 192",
+      // =====================================================
+      // 2 — SECOND SECTION
+      // =====================================================
 
-      // Descend to baseline
-      "C 146 208 140 224 136 234",
+      // Rise toward second arch
+      "C 87 215 94 190 107 171",
 
-      // Bottom turn on baseline
-      "C 134 240 140 242 148 240",
+      // Smooth approach toward second top
+      "C 114 162 122 157 131 157",
 
-      // Short exit tail — upward/right
-      "C 158 236 168 228 176 220",
+      // Wide rounded second top
+      "C 140 157 146 164 146 175",
+
+      // Straight vertical second downstroke
+      "C 146 192 146 210 146 222",
+
+
+      // =====================================================
+      // FINAL TAIL
+      // =====================================================
+
+      // Continue vertically toward baseline
+      "C 146 228 146 232 149 234",
+
+      // Smooth rounded bottom
+      "C 152 237 157 237 162 235",
+
+      // Smooth transition toward the right
+      "C 167 233 172 229 177 225",
+
+      // Gradual upward/right finish
+      "C 182 221 187 216 192 211",
     ].join(" "),
   ],
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
 
   traceTolerance: 36,
-
   traceCoverage: 0.99,
 
-  // Arrow 1 = first hump
-  // Arrow 2 = second hump
-  // Arrow 3 = exit tail
-  directionArrowFractions: [0.08, 0.46, 0.82],
+  // 1 = first arch
+  // 2 = second arch + exit tail
+  directionArrowFractions: [0.08, 0.62],
 };

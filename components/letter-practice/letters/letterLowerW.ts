@@ -48,44 +48,44 @@ export const letterLowerW: LetterDefinition = {
   strokePaths: [
     [
       // Stroke 1 — start at x-height on the left
-      "M 52 165",
+      "M 52 157.5",
 
       // Downstroke, slightly leaning left
-      "C 49 183 45 207 44 221",
+      "C 49 178.3 45 205.9 44 222.1",
 
       // First rounded bottom
-      "C 43 233 49 240 59 240",
+      "C 43 235.9 49 244 59 244",
 
       // Sweep right along the bottom
-      "C 71 240 81 232 90 219",
+      "C 71 244 81 234.8 90 219.8",
 
       // Rise to x-height in the middle
-      "C 101 203 108 183 113 165",
+      "C 101 201.3 108 178.3 113 157.5",
     ].join(" "),
 
     [
       // Stroke 2 — start at x-height in the middle
-      "M 113 165",
+      "M 113 157.5",
 
       // Descend with a slight leftward slant
-      "C 110 184 106 207 105 221",
+      "C 110 179.4 106 205.9 105 222.1",
 
       // Second rounded bottom
-      "C 104 233 110 240 120 240",
+      "C 104 235.9 110 244 120 244",
 
       // Sweep through second rounded section
-      "C 132 240 142 232 151 219",
+      "C 132 244 142 234.8 151 219.8",
 
       // Rise strongly back to x-height
-      "C 162 203 169 183 174 165",
+      "C 162 201.3 169 178.3 174 157.5",
     ].join(" "),
 
     [
       // Stroke 3 — small finishing stroke at upper-right
-      "M 174 165",
+      "M 174 157.5",
 
       // Short rightward exit
-      "C 182 167 190 168 198 165",
+      "C 182 159.8 190 161 198 157.5",
     ].join(" "),
   ],
 

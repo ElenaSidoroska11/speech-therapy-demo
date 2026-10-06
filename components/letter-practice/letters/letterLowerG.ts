@@ -1,8 +1,13 @@
 import type { LetterDefinition } from "./types";
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Cursive (Victoria Modern Script) lowercase g — two strokes.
+ *
+ * Slightly straighter / more upright version.
  *
  * Stroke 1:
  * Starts at the blue dot on the upper-right at x-height.
@@ -10,19 +15,23 @@ import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
  * smoothly to the starting junction.
  *
  * Stroke 2:
- * Starts at the same blue dot, travels down the right side,
- * passes through the baseline into the descender area,
- * then curves around into a large leftward hook.
- *
- * Same path design as before, uniformly scaled (X and Y) so
- * proportions stay the same and ink spans line 2 → line 4.
+ * Starts at the same blue dot, travels almost straight down
+ * the right side, passes through the baseline into the
+ * descender area, then curves into the leftward hook.
  */
 export const letterLowerG: LetterDefinition = {
   id: "g",
   letter: "g",
+
   spokenName: "the letter G",
 
-  acceptTranscripts: ["g", "gee", "letter g", "the letter g", "guh"],
+  acceptTranscripts: [
+    "g",
+    "gee",
+    "letter g",
+    "the letter g",
+    "guh",
+  ],
 
   viewBox: LOWERCASE_ARTBOARD.viewBox,
   fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
@@ -39,49 +48,49 @@ export const letterLowerG: LetterDefinition = {
      */
     [
       // Start at blue dot on x-height
-      "M 162.5 170.9",
+      "M 162.5 164.5",
 
-      // Move left across rounded top (line 2)
-      "C 146.7 164 126.9 164.7 111.1 172.2",
+      // Rounded top — slightly more upright
+      "C 148.5 158.2 130.5 158.5 116.2 165.9",
 
-      // Down around left side
-      "C 94.6 180.5 86.4 196.2 87.8 212.7",
+      // Left side — brought slightly inward
+      "C 101.2 174.5 94.5 191.2 95.2 208.5",
 
-      // Rounded bottom of oval (near line 3)
-      "C 89.1 229.1 98.7 239.4 111.8 240.8",
+      // Rounded bottom of oval
+      "C 96.0 225.8 104.5 237.5 117.0 240.0",
 
-      // Come around right side
-      "C 125.5 242.2 139.9 231.9 148.8 217.5",
+      // Right side
+      "C 130.0 242.0 143.0 230.5 151.0 214.5",
 
       // Return smoothly to blue dot
-      "C 158.4 203.1 163.9 184.6 162.5 170.9",
+      "C 159.0 198.5 163.5 179.0 162.5 164.5",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Blue dot → down right side →
+     * Blue dot → straighter downstroke →
      * through baseline → descender →
      * rounded hook toward the left.
      */
     [
       // Start at same blue dot
-      "M 162.5 170.9",
+      "M 162.5 164.5",
 
-      // Downstroke
-      "C 160.5 189.4 158.4 209.9 155.7 230.5",
+      // Straighter downward movement
+      "C 162.0 184.5 160.8 206.5 159.0 229.0",
 
-      // Pass through baseline
-      "C 152.9 249.7 150.9 269.6 148.1 288.1",
+      // Continue almost vertically through baseline
+      "C 157.5 250.0 156.0 271.5 154.0 291.5",
 
-      // Continue into descender
-      "C 146.1 303.2 141.3 314.9 133.7 321.7",
+      // Descender — delay the leftward curve
+      "C 152.5 307.0 148.5 319.5 141.5 327.0",
 
-      // Round the bottom of the hook (line 4)
-      "C 124.8 329.9 111.8 332 98.7 329.3",
+      // Rounded bottom hook
+      "C 133.0 335.5 120.5 338.5 108.0 336.0",
 
-      // Finish with long leftward sweep
-      "C 89.8 327.2 82.3 323.8 76.1 320.3",
+      // Leftward finish
+      "C 99.5 334.0 92.0 330.5 85.5 326.5",
     ].join(" "),
   ],
 

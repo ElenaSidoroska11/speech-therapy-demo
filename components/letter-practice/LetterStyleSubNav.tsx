@@ -19,7 +19,7 @@ export function LetterStyleButton({ label, active, onSelect }: LetterStyleButton
       whileTap={{ scale: 0.97 }}
       onClick={onSelect}
       aria-current={active ? "true" : undefined}
-      className={`w-full rounded-2xl px-4 py-2.5 text-center text-sm font-extrabold shadow-lg ring-2 ring-white/70 backdrop-blur-md transition sm:text-base ${
+      className={`w-full rounded-2xl px-4 py-2.5 text-center text-base font-extrabold shadow-lg ring-2 ring-white/70 backdrop-blur-md transition md:rounded-3xl md:px-6 md:py-4 md:text-xl ${
         active
           ? "bg-[#e52328] text-white  shadow-[0_6px_0_#B91C1C] hover:shadow-none"
           : "bg-[#FDA702] text-white shadow-[0_6px_0_#0F766E] hover:bg-[#e52328] hover:shadow-none"
@@ -41,7 +41,7 @@ export function LetterStyleSubNav({
   className = "",
 }: LetterStyleSubNavProps) {
   return (
-    <nav aria-label="Letter styles" className={`flex w-full flex-col gap-3 pl-4 ${className}`}>
+    <nav aria-label="Letter styles" className={`flex w-full flex-col gap-2 md:gap-5 ${className}`}>
       {LETTER_STYLES.map((style) => (
         <LetterStyleButton
           key={style.id}
@@ -80,7 +80,7 @@ export function LetterPracticeSidebarFooter({
   return (
     <nav
       aria-label="Letter practice"
-      className={`flex w-full flex-col gap-4 pl-4 ${className}`}>
+      className={`flex w-full flex-col gap-2 md:gap-5 ${className}`}>
       <LetterStyleButton
         label={active.label}
         active

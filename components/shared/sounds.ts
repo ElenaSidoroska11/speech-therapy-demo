@@ -152,20 +152,39 @@ export function playWatchHow(onComplete?: () => void): () => void {
 }
 
 let letterPracticeAudio: HTMLAudioElement | null = null;
+let letterPracticeCompleteHandler: (() => void) | null = null;
 
-export function playLetterPractice(): () => void {
+export function playLetterPractice(onComplete?: () => void): () => void {
   if (typeof window === "undefined") return () => {};
 
+  if (letterPracticeAudio && letterPracticeCompleteHandler) {
+    letterPracticeAudio.removeEventListener("ended", letterPracticeCompleteHandler);
+  }
   if (letterPracticeAudio) {
     letterPracticeAudio.pause();
     letterPracticeAudio.currentTime = 0;
   }
 
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    letterPracticeCompleteHandler = null;
+    onComplete?.();
+  };
+
   const audio = new Audio("/letter-practice.wav");
   letterPracticeAudio = audio;
+  letterPracticeCompleteHandler = finish;
+  audio.addEventListener("ended", finish, { once: true });
   void audio.play().catch(() => {});
 
   return () => {
+    finished = true;
+    audio.removeEventListener("ended", finish);
+    if (letterPracticeCompleteHandler === finish) {
+      letterPracticeCompleteHandler = null;
+    }
     audio.pause();
     audio.currentTime = 0;
     if (letterPracticeAudio === audio) {
@@ -198,7 +217,7 @@ export function playSoftError() {
     softErrorAudio.currentTime = 0;
   }
 
-  const audio = new Audio("/soft-error.mp3");
+  const audio = new Audio("/soft-error1.mp3");
   softErrorAudio = audio;
   void audio.play().catch(() => {});
 }

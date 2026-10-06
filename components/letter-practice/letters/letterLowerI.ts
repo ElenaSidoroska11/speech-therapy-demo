@@ -1,22 +1,23 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase i — two strokes.
  *
+ * Straight / upright version.
+ *
  * Stroke 1:
- * Starts at x-height (line 2), travels downward with a
- * slight leftward curve to the baseline, then curves
- * smoothly upward/right into the exit tail.
+ * Starts at x-height (line 2), travels straight downward
+ * to the baseline, forms a larger rounded bottom,
+ * then continues into the original exit tail.
  *
  * Stroke 2:
- * A small dot centred above the stem, between
- * line 1 and line 2.
- *
- * Matches the worksheet reference:
- *   1 = stem + exit tail
- *   2 = dot
+ * A small dot centred directly above the upright stem,
+ * between line 1 and line 2.
  */
 export const letterLowerI: LetterDefinition = {
   id: "i",
@@ -25,7 +26,12 @@ export const letterLowerI: LetterDefinition = {
 
   spokenName: "the letter I",
 
-  acceptTranscripts: ["i", "eye", "letter i", "the letter i"],
+  acceptTranscripts: [
+    "i",
+    "eye",
+    "letter i",
+    "the letter i",
+  ],
 
   viewBox: LOWERCASE_ARTBOARD.viewBox,
 
@@ -37,41 +43,39 @@ export const letterLowerI: LetterDefinition = {
     /**
      * STROKE 1
      *
-     * Start on line 2 → descend → rounded bottom →
-     * exit upward/right.
-     *
-     * The stem leans slightly left, matching the
-     * worksheet reference.
+     * Straight stem.
+     * Larger rounded bottom.
+     * Original exit-tail design preserved.
      */
     [
       // Start exactly on x-height / line 2
-      "M 108 164",
+      "M 108 157",
 
-      // Descend with a subtle leftward slant
-      "C 106 179 103 197 100 214",
+      // Straight vertical descent
+      "C 108 176 108 197 108 216",
 
-      // Continue toward the baseline
-      "C 98 225 98 231 102 234",
+      // Continue straight down before the rounded turn
+      "C 108 228 108 236 111 240",
 
-      // Rounded turn at the baseline
-      "C 106 237 112 235 118 231",
+      // Larger and smoother rounded bottom
+      "C 114 245 120 246 125 243",
 
-      // Exit tail rises smoothly to the right
-      "C 124 227 130 222 136 217",
+      // Continue smoothly into the original tail
+      "C 128 241 130 238 132 235",
+
+      // Original exit-tail direction and finish
+      "C 134 232 137 226 139 220",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Dot above the stem, clearly above line 2
-     * (midline) so it does not touch stroke 1.
-     * With strokeWidth 28, center at y=126 puts the
-     * bottom of the round cap ~10 units above midline.
-     *
-     * Very short path + round linecap makes this
-     * appear as the round orange dot in the reference.
+     * Dot positioned directly above the straight stem.
      */
-    ["M 111 126", "L 111.1 126"].join(" "),
+    [
+      "M 108 126",
+      "L 108.1 126",
+    ].join(" "),
   ],
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
@@ -80,7 +84,5 @@ export const letterLowerI: LetterDefinition = {
 
   traceCoverage: 0.99,
 
-  // 1 = downward stem
-  // 2 = dot
   directionArrowFractions: [0.15, 0.5],
 };

@@ -57,7 +57,11 @@ export function LetterGlyphPreview({
     }
     const glyphW = bounds.maxX - bounds.minX;
     const glyphH = bounds.maxY - bounds.minY;
-    const side = Math.max(glyphW, glyphH) + pad * 2;
+    const inkSide = Math.max(glyphW, glyphH) + pad * 2;
+    const scale = letter.previewScale ?? 1;
+    // Larger crop → smaller glyph; stroke stays tile-relative so scaled
+    // letters (a, c) keep the same visual weight as the rest.
+    const side = inkSide / scale;
     const cx = (bounds.minX + bounds.maxX) / 2;
     const cy = (bounds.minY + bounds.maxY) / 2;
     return {

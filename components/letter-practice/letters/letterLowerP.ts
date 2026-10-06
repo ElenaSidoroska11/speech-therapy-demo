@@ -8,24 +8,25 @@ import {
 /**
  * Victoria Modern Script lowercase p — two strokes.
  *
+ * Straight / upright version.
+ *
  * Stroke 1:
- * Starts at x-height and travels downward with a slight
- * leftward slant, passing the baseline and continuing
- * to the descender line.
+ * Starts at x-height and travels STRAIGHT vertically downward,
+ * passing the baseline and continuing to the descender line.
  *
  * Stroke 2:
  * Starts slightly to the RIGHT of stroke 1, leaving
- * a small visible gap between the two starting points.
- * It rises into an n-shaped rounded hump, descends
- * to the baseline, then curves upward/right
- * into the exit tail.
+ * a small visible gap. It rises into the rounded hump.
  *
- * Stroke 1 is unchanged. Stroke 2 is the same smooth
- * hump, scaled to sit between line 2 and line 3.
+ * After the hump, the right side travels STRAIGHT downward
+ * toward the baseline without curving to the left.
+ *
+ * At the baseline it forms a smooth rounded turn,
+ * then continues into a gently angled exit tail.
  *
  * Reference:
- * 1 = descending stem
- * 2 = rounded hump + exit tail (line 2 → line 3)
+ * 1 = straight descending stem
+ * 2 = upright rounded hump + rounded exit tail
  */
 
 export const letterLowerP: LetterDefinition = {
@@ -52,50 +53,55 @@ export const letterLowerP: LetterDefinition = {
     /**
      * STROKE 1
      *
-     * Long descending stem (unchanged).
+     * Completely straight / vertical stem.
      */
     [
-      // Start point 1
-      "M 88 146",
+      // Start at x-height
+      "M 88 148",
 
-      // Slightly left-slanted descent
-      "C 85 170 81 198 77 226",
+      // Straight vertical descent
+      "C 88 172 88 200 88 228",
 
-      // Continue below baseline
-      "C 73 254 69 282 65 308",
+      // Continue straight below baseline
+      "C 88 256 88 284 88 310",
 
       // Finish near descender line
-      "C 63 322 61 334 59 342",
+      "C 88 324 88 336 88 344",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Starts separately to the RIGHT of stroke 1.
-     * Same smooth n-shaped hump — scaled to sit
-     * between line 2 and line 3.
+     * Rounded hump → straight downward section →
+     * rounded bottom → angled exit tail.
      */
     [
-      // Start point 2 — separate from stroke 1
-      "M 90 191.1",
+      // Start slightly to the right of stroke 1
+      "M 94 193.1",
 
-      // Sweep upward/right into the hump (touches line 2)
-      "C 115 164.5 125 160.5 136 160.5",
+      // Rise toward x-height
+      "C 104 174 116 162.5 132 162.5",
 
-      // Rounded top of hump along line 2
-      "C 149 160.5 157 165.8 160 173.8",
+      // Rounded top of hump
+      "C 146 162.5 155 167.5 158 175.5",
 
-      // Round over the right side
-      "C 163 181.7 160 192.4 156 201.7",
+      // Finish the rounded upper-right part
+      "C 160 181 160 187 160 193",
 
-      // Descend toward baseline
-      "C 152 211.6 148 220.9 146 228.2",
+      // Go STRAIGHT downward — no movement to the left
+      "L 160 226",
 
-      // Rounded bottom turn at baseline (line 3)
-      "C 144 234.2 148 237.5 156 237.5",
+      // Continue straight almost to baseline
+      "L 160 232",
 
-      // Exit tail upward/right
-      "C 168 237.5 181 227.5 195 216.3",
+      // Smooth rounded turn at the bottom
+      "C 160 237 163 240 168 240",
+
+      // Continue the rounded transition toward the right
+      "C 175 240 181 235 186 230",
+
+      // Gently angled exit tail
+      "C 190 226 194 222 198 218",
     ].join(" "),
   ],
 

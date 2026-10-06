@@ -8,23 +8,23 @@ import {
 /**
  * Victoria Modern Script lowercase q — two strokes.
  *
+ * Straight / upright version.
+ *
  * Stroke 1:
- * Starts at the upper-right at x-height (line 2).
- * Sweeps left across the top, curves down around the
- * left side, forms the rounded oval body, then curves
- * back upward/right to finish near the starting point.
+ * Rounded upright oval between line 2 and line 3.
  *
  * Stroke 2:
  * Starts at the upper-right of the oval and travels
- * downward through the baseline to the descender (line 4).
- * At the bottom it curves left slightly, then turns
- * upward/right to form the finishing hook.
+ * completely STRAIGHT vertically downward.
  *
- * Ink spans line 2 → line 4 (top does not rise above midline).
+ * Near the bottom, the straight stem transitions very gradually
+ * into a soft rounded curve and finishes gently upward/right.
+ *
+ * No sharp corner and no deep semicircle.
  *
  * Reference:
- * 1 = rounded oval body
- * 2 = descending stem + bottom hook
+ * 1 = rounded upright oval
+ * 2 = straight descending stem + smooth gradual hook
  */
 
 export const letterLowerQ: LetterDefinition = {
@@ -52,59 +52,61 @@ export const letterLowerQ: LetterDefinition = {
     /**
      * STROKE 1
      *
-     * Rounded a-like oval.
-     * Starts at the upper-right, sweeps left over the top
-     * (line 2), then travels around the oval and returns upward.
+     * Upright rounded oval.
      */
     [
       // Start point 1 — upper-right at x-height
-      "M 145 172.0",
+      "M 145 165",
 
-      // Sweep left across the top (touches line 2)
-      "C 129 164.0 108 164.8 93 171.2",
+      // Sweep horizontally left across the top
+      "C 132 158 111 158 96 164",
 
-      // Curve around upper-left side
-      "C 78 177.5 70 190.3 67 205.4",
+      // Rounded upper-left side
+      "C 80 170 72 183 72 200",
 
-      // Continue down the left side
-      "C 64 220.5 68 234.1 77 241.2",
+      // Upright left side
+      "C 72 217 76 232 85 239",
 
-      // Rounded bottom of oval (near baseline)
-      "C 86 248.4 99 246.8 111 240.4",
+      // Rounded bottom
+      "C 94 246 107 246 118 239",
 
-      // Sweep upward/right inside the oval
-      "C 124 233.3 134 220.5 140 206.2",
+      // Upright right side
+      "C 130 231 138 217 142 201",
 
-      // Continue upward toward starting area
-      "C 145 193.5 148 180.7 145 172.0",
+      // Continue upward to starting point
+      "C 146 185 148 172 145 165",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Long descending q stem.
-     * Starts at the upper-right of the oval,
-     * descends below the baseline and finishes
-     * with the characteristic curved hook on line 4.
+     * Straight vertical stem with a very smooth,
+     * gradual rounded exit.
      */
     [
-      // Start point 2
-      "M 145 172.0",
+      // Start point — upper-right of oval
+      "M 145 165",
 
-      // Descend through the oval
-      "C 141 194.3 136 218.1 131 242.0",
+      // Completely straight through the oval
+      "C 145 190 145 216 145 241",
 
-      // Continue below baseline
-      "C 126 265.1 121 289.0 118 308.9",
+      // Continue completely straight downward
+      "C 145 265 145 289 145 311",
 
-      // Approach descender line
-      "C 116 319.3 117 325.6 122 328.8",
+      // Straight almost all the way to the bottom
+      "C 145 322 145 331 145 336",
 
-      // Rounded bottom turn toward the right (line 4)
-      "C 128 332.0 137 328.0 146 321.6",
+      // Very gradual beginning of the curve
+      "C 145 341 147 344 151 345",
 
-      // Final upward/right hook
-      "C 151 318.5 156 314.5 162 309.7",
+      // Smooth rounded transition
+      "C 156 347 162 345 167 341",
+
+      // Continue naturally into the hook
+      "C 173 336 177 329 180 322",
+
+      // Soft upward/right finish
+      "C 182 319 183 316 184 314",
     ].join(" "),
   ],
 
@@ -115,6 +117,6 @@ export const letterLowerQ: LetterDefinition = {
   traceCoverage: 0.99,
 
   // 1 = oval
-  // 2 = descending stem + hook
+  // 2 = straight descending stem + smooth gradual hook
   directionArrowFractions: [0.12, 0.42],
 };

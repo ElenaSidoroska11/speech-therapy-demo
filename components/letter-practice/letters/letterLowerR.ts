@@ -9,12 +9,14 @@ import {
  * Victoria Modern Script lowercase r — two strokes.
  *
  * LOWER HALF:
- * Stroke 1 and Stroke 2 overlap / stay connected.
+ * Stroke 1 and Stroke 2 overlap and form
+ * one completely straight vertical stem.
  *
  * UPPER HALF:
- * The strokes divide.
- * Stroke 1 goes LEFT.
- * Stroke 2 goes RIGHT and forms the r tail.
+ * Stroke 1 curves toward the LEFT (unchanged).
+ * Stroke 2 goes straight first, then slowly drifts
+ * to the RIGHT, leaving more space between the strokes,
+ * and forms the r tail.
  */
 
 export const letterLowerR: LetterDefinition = {
@@ -40,67 +42,59 @@ export const letterLowerR: LetterDefinition = {
 
   strokePaths: [
     /**
-     * STROKE 1
-     *
-     * Starts at the TOP LEFT.
-     * Curves toward the centre.
-     * Then descends along the shared lower stem.
+     * STROKE 1 (unchanged)
      */
     [
       // Top-left starting point
-      "M 77 158",
+      "M 77 160",
 
-      // Move RIGHT from the starting point
-      "C 83 153 90 151 96 153",
+      // Move right toward centre
+      "C 83 155 90 153 96 155",
 
-      // Curve into the centre
-      "C 101 156 102 162 100 169",
+      // Smooth curve into centre
+      "C 100 158 101 164 100 171",
 
-      // Enter shared section
-      "C 97 180 94 191 91 202",
+      // Enter the shared vertical section
+      "C 100 183 100 194 100 206",
 
-      // Shared lower stem
-      "C 88 214 85 226 82 238",
+      // Completely straight lower stem
+      "C 100 218 100 231 100 243",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Starts at the SAME bottom area.
-     * Follows the shared lower stem upward.
-     *
-     * Around halfway it DIVIDES from stroke 1
-     * and travels toward the RIGHT.
+     * Starts at the bottom, goes straight up,
+     * then bends to the right so the gap
+     * to stroke 1 widens gradually.
      */
     [
       // Same bottom point
-      "M 82 238",
+      "M 100 243",
 
-      // Follow SAME lower stem upward
-      "C 85 226 88 214 91 202",
+      // Straight upward (shared with stroke 1)
+      "C 100 235 100 227 100 219",
 
-      // Continue shared section
-      "C 94 191 97 180 100 169",
+      // Slow drift to the right begins
+      "C 100 205 104 192 110 181",
 
-      // DIVISION STARTS HERE
-      // Stroke 2 now moves RIGHT
-      "C 104 158 109 151 115 149",
+      // Continues rightward and upward
+      "C 116 170 124 160 133 154",
 
       // Rounded upper shoulder
-      "C 121 147 126 150 129 155",
+      "C 138 150 144 150 148 155",
 
-      // Small dip
-      "C 132 160 136 163 140 163",
+      // Small rounded dip
+      "C 152 160 155 165 160 165",
 
       // Right-facing tail
-      "C 146 163 151 158 156 153",
-
-      // Final upward/right flick
-      "C 160 150 164 150 168 152",
+      "C 166 165 172 160 177 155",
     ].join(" "),
   ],
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
+
+  previewScale: 0.7,
 
   traceTolerance: 36,
 

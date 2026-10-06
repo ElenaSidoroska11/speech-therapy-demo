@@ -6,12 +6,12 @@ export function Sun() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute right-1 top-2 z-30 sm:right-0 sm:top-4 md:-right-1 md:top-5"
+      className="pointer-events-none absolute right-1.5 top-2.5 z-30 sm:right-0 sm:top-4 md:-right-1 md:top-5"
       initial={{ opacity: 0, scale: 0.7 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, delay: 0.1 }}
     >
-      <div className="relative h-48 w-48 drop-shadow-[0_0_20px_rgba(255,213,74,0.55)] sm:h-64 sm:w-64 md:h-96 md:w-96 md:drop-shadow-[0_0_32px_rgba(255,213,74,0.65)]">
+      <div className="relative h-12 w-12 drop-shadow-[0_0_10px_rgba(255,213,74,0.45)] sm:h-40 sm:w-40 sm:drop-shadow-[0_0_20px_rgba(255,213,74,0.55)] md:h-96 md:w-96 md:drop-shadow-[0_0_32px_rgba(255,213,74,0.65)]">
         <motion.svg
           viewBox="0 0 120 120"
           className="absolute inset-0 h-full w-full"

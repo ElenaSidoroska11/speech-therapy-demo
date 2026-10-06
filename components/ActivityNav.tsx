@@ -123,7 +123,11 @@ function NavLinks({
           expanded
           size={size}
           onSelect={() => {
-            onPick?.();
+            // Keep the mobile menu open for Letter Practice so style/letter
+            // options in the footer can be chosen without reopening.
+            if (item.id !== "letters") {
+              onPick?.();
+            }
             onSelect(item.id);
           }}
         />
@@ -187,7 +191,7 @@ export function BrandSidebar({
         priority
         className="mb-3 h-auto w-56 -translate-y-4 object-contain md:w-64 md:-translate-y-6"
       />
-      <div className="mt-4 flex w-max flex-col gap-5">
+      <div className="-mt-2 flex w-max flex-col gap-5">
         <ActivityDesktopNav
           items={items}
           activeId={activeId}
@@ -272,7 +276,17 @@ export function ActivityNav({
                 onHome={onHome}
                 onPick={() => setOpen(false)}
               />
-              {footer ? <div className="mt-1 border-t border-white/50 pt-2">{footer}</div> : null}
+              {footer ? (
+                <div
+                  className="mt-1 border-t border-white/50 pt-2"
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).closest("button")) {
+                      setOpen(false);
+                    }
+                  }}>
+                  {footer}
+                </div>
+              ) : null}
             </motion.nav>
           </>
         ) : null}

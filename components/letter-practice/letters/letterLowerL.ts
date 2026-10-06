@@ -1,13 +1,21 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase l — one stroke.
  *
- * Starts at the ascender line, descends with a slight
- * leftward slant, makes a broad rounded turn on the
- * baseline, then rises smoothly up and right.
+ * Straight / upright version.
+ *
+ * Starts at the ascender line and travels straight vertically
+ * downward. At the bottom it forms a larger, smoother rounded
+ * turn before continuing into the original exit tail.
+ *
+ * Same path as the client design, shifted up so the stroke
+ * does not cross baseline (line 3).
  */
 export const letterLowerL: LetterDefinition = {
   id: "l",
@@ -33,17 +41,25 @@ export const letterLowerL: LetterDefinition = {
   strokePaths: [
     [
       // Start at top / ascender line
-      "M 112 66",
+      "M 112 56",
 
-      // Tall stem — ease the slant gradually
-      "C 106 110 98 155 92 190",
+      // Straight vertical stem
+      "C 112 102 112 150 112 186",
 
-      // Soften into the baseline (no hard corner)
-      "C 88 212 84 228 88 236",
+      // Continue straight downward
+      "C 112 208 112 224 113 232",
 
-      // Continuous rounded bowl → exit (one smooth sweep)
-      "C 92 244 110 242 124 232",
-      "C 136 222 146 212 154 204",
+      // Continue down before beginning the turn
+      "C 114 239 117 243 122 245",
+
+      // Larger, rounder semicircular bottom
+      "C 128 248 136 246 143 241",
+
+      // Smooth rounded rise into the original tail
+      "C 150 236 155 229 159 221",
+
+      // Original-style exit tail
+      "C 161 216 163 210 164 204",
     ].join(" "),
   ],
 

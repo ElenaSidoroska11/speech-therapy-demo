@@ -20,17 +20,17 @@ export function LetterStrokeFrame({
   children,
 }: LetterStrokeFrameProps) {
   const maxWidth = withCueImages
-    ? "max-w-lg sm:max-w-xl"
+    ? "max-w-none sm:max-w-lg md:max-w-xl"
     : wideLetter
-      ? "max-w-xl"
-      : "max-w-md sm:max-w-lg";
+      ? "max-w-none sm:max-w-xl"
+      : "max-w-none sm:max-w-md md:max-w-lg";
 
-  const innerWidth = withCueImages || wideLetter ? "w-[90%]" : "w-[78%]";
+  const innerWidth = withCueImages || wideLetter ? "w-[92%]" : "w-[86%] sm:w-[78%]";
 
   return (
     <div className="flex min-h-0 flex-col items-center gap-2">
       {toolbar && (
-        <div className="flex min-h-13 shrink-0 items-center justify-center">
+        <div className="flex min-h-10 shrink-0 items-center justify-center sm:min-h-13">
           {toolbar}
         </div>
       )}

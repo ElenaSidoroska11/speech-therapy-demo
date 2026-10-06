@@ -42,31 +42,32 @@ export const letterLowerV: LetterDefinition = {
   strokePaths: [
     [
       // Stroke 1 — start at x-height on the left
-      "M 102 165",
+      "M 102 157.5",
 
       // Downstroke, leaning gently left
-      "C 99 183 95 205 93 221",
+      "C 99 178 95 203 93 221.1",
 
       // Continue into the rounded bottom
-      "C 91 233 96 240 105 241",
+      "C 91 234.8 96 242.7 105 243.9",
 
       // Wide smooth bottom curve
-      "C 117 242 128 234 138 221",
+      "C 117 245 128 235.9 138 221.1",
 
       // Sweep upward/right
-      "C 150 206 158 185 164 165",
+      "C 150 204.1 158 180.2 164 157.5",
     ].join(" "),
 
     [
       // Stroke 2 — short finishing stroke at top-right
-      "M 164 165",
+      "M 164 157.5",
 
       // Small rightward finishing curve
-      "C 172 166 179 166 186 165",
+      "C 172 158.6 179 158.6 186 157.5",
     ].join(" "),
   ],
 
   strokeWidth: 21,
+  previewScale: 0.7,
 
   traceTolerance: 20,
 

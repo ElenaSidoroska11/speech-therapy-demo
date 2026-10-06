@@ -1,5 +1,5 @@
 import type { LetterDefinition } from "./types";
-// import { letterCh } from "./letterCh";
+import { letterCh } from "./letterCh";
 import { letterA } from "./letterA";
 import { letterLowerB } from "./letterLowerB";
 import { letterC } from "./letterC";
@@ -30,16 +30,16 @@ import { letterLowerY } from "./letterLowerY";
 import { letterLowerZ } from "./letterLowerZ";
 // import { letterM } from "./letterM";
 // import { letterS } from "./letterS";
-// import { letterSh } from "./letterSh";
-// import { letterTh } from "./letterTh";
-// import { letterWh } from "./letterWh";
+import { letterSh } from "./letterSh";
+import { letterTh } from "./letterTh";
+import { letterWh } from "./letterWh";
 
 /**
  * Registry of practice graphemes (letters + digraphs).
  * To add one: create `letterX.ts`, extend `LetterId`, and register it here.
  *
  * Order drives the letter picker and “Next” navigation.
- * Currently active: a, b, c, d, h, s (others commented out for later).
+ * Every registered letter is selectable.
  */
 export const LETTERS = {
   a: letterA,
@@ -71,16 +71,20 @@ export const LETTERS = {
   // S: letterS,
   // M: letterM,
   // L: letterL,
-  // ch: letterCh,
-  // sh: letterSh,
-  // th: letterTh,
-  // wh: letterWh,
+  ch: letterCh,
+  sh: letterSh,
+  th: letterTh,
+  wh: letterWh,
 } as const satisfies Record<string, LetterDefinition>;
 
-/** Only ids present in `LETTERS` (currently `a`, `b`, `c`, `d`, `h`, and `s`). */
+/** Only ids present in `LETTERS`. */
 export type ActiveLetterId = keyof typeof LETTERS;
 
 export const AVAILABLE_LETTERS = Object.keys(LETTERS) as ActiveLetterId[];
+
+export function isSelectableLetter(id: ActiveLetterId): boolean {
+  return id in LETTERS;
+}
 
 export function getLetter(id: ActiveLetterId): LetterDefinition {
   return LETTERS[id];
@@ -88,8 +92,12 @@ export function getLetter(id: ActiveLetterId): LetterDefinition {
 
 export function getNextLetter(id: ActiveLetterId): ActiveLetterId | null {
   const i = AVAILABLE_LETTERS.indexOf(id);
-  if (i < 0 || i >= AVAILABLE_LETTERS.length - 1) return null;
-  return AVAILABLE_LETTERS[i + 1];
+  if (i < 0) return null;
+  for (let nextIndex = i + 1; nextIndex < AVAILABLE_LETTERS.length; nextIndex++) {
+    const next = AVAILABLE_LETTERS[nextIndex];
+    if (isSelectableLetter(next)) return next;
+  }
+  return null;
 }
 
 export type { LetterCueImage, LetterDefinition, LetterStep } from "./types";

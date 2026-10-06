@@ -7,7 +7,12 @@ import { LetterStroke } from "./LetterStroke";
 import { LetterStrokeFrame } from "./LetterStrokeFrame";
 import { TraceExerciseActions } from "./TraceExerciseActions";
 import type { LetterDefinition, LetterId } from "./letters";
-import type { useLetterTrace } from "./hooks/useLetterTrace";
+import {
+  ERROR_PULSE_DURATION_S,
+  ERROR_PULSE_REPEAT,
+  ERROR_PULSE_REPEAT_DELAY_S,
+  type useLetterTrace,
+} from "./hooks/useLetterTrace";
 
 type TraceHandlers = Pick<
   ReturnType<typeof useLetterTrace>,
@@ -59,7 +64,7 @@ export function TraceExerciseWorkspace({
   const userStrokeWidth = Math.max(10, letter.strokeWidth * 0.45);
 
   return (
-    <div className="grid min-h-0 w-full flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-4 sm:grid-cols-2 sm:grid-rows-[minmax(0,1fr)] sm:gap-5">
+    <div className="grid min-h-0 w-full flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-3 md:grid-cols-2 md:grid-rows-[minmax(0,1fr)] md:gap-5">
       <LetterStrokeFrame
         withCueImages={Boolean(letter.cueImages?.length)}
         wideLetter={wideLetter}
@@ -70,9 +75,9 @@ export function TraceExerciseWorkspace({
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
             onClick={onReplayDemo}
-            className="inline-flex items-center gap-2 rounded-2xl bg-[#e52328] px-4 py-3 font-extrabold text-white  ring-2 ring-white/70">
-            <RotateCcw className="h-7 w-7 text-white" strokeWidth={3} />
-            <span className="text-xl leading-none">Play</span>
+            className="inline-flex items-center gap-1.5 rounded-2xl bg-[#e52328] px-3 py-2 font-extrabold text-white ring-2 ring-white/70 sm:gap-2 sm:px-4 sm:py-3">
+            <RotateCcw className="h-5 w-5 text-white sm:h-7 sm:w-7" strokeWidth={3} />
+            <span className="text-base leading-none sm:text-xl">Play</span>
           </motion.button>
         }>
         <DemoLetterStroke
@@ -142,26 +147,29 @@ export function TraceExerciseWorkspace({
               strokeLinejoin="round"
               opacity={0.95}
               pointerEvents="none"
-              initial={{ strokeWidth: userStrokeWidth }}
+              initial={{ strokeWidth: userStrokeWidth, y: 0 }}
               animate={
                 errorPulse > 0
                   ? {
+                      y: [0, -14, 0, -7, 0],
                       strokeWidth: [
                         userStrokeWidth,
-                        userStrokeWidth * 1.45,
-                        userStrokeWidth * 0.8,
-                        userStrokeWidth * 1.2,
+                        userStrokeWidth * 0.85,
+                        userStrokeWidth * 1.15,
+                        userStrokeWidth * 0.9,
                         userStrokeWidth,
                       ],
                     }
-                  : { strokeWidth: userStrokeWidth }
+                  : { strokeWidth: userStrokeWidth, y: 0 }
               }
               transition={
                 errorPulse > 0
                   ? {
-                      duration: 0.42,
-                      times: [0, 0.28, 0.55, 0.78, 1],
-                      ease: "easeInOut",
+                      duration: ERROR_PULSE_DURATION_S,
+                      times: [0, 0.35, 0.55, 0.78, 1],
+                      ease: ["easeOut", "easeIn", "easeOut", "easeIn", "easeOut"],
+                      repeat: ERROR_PULSE_REPEAT,
+                      repeatDelay: ERROR_PULSE_REPEAT_DELAY_S,
                     }
                   : { duration: 0 }
               }

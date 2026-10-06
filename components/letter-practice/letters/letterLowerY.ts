@@ -45,36 +45,36 @@ export const letterLowerY: LetterDefinition = {
   strokePaths: [
     [
       // Stroke 1 — start at x-height on the left
-      "M 105 165",
+      "M 105 157.5",
 
       // Descend with a slight leftward slant
-      "C 102 184 98 205 98 219",
+      "C 102 178 98 200.6 98 215.6",
 
       // Rounded bottom of the u-shape
-      "C 98 231 104 237 114 237",
+      "C 98 228.5 104 235 114 235",
 
       // Sweep right and begin rising
-      "C 126 237 137 227 145 214",
+      "C 126 235 137 224.2 145 210.2",
 
       // Rise back to x-height
-      "C 155 198 161 180 165 165",
+      "C 155 193 161 173.6 165 157.5",
     ].join(" "),
 
     [
       // Stroke 2 — start at x-height on the right
-      "M 165 165",
+      "M 165 157.5",
 
       // Descend along the right stem
-      "C 162 188 158 214 155 237",
+      "C 162 182.3 158 210.2 155 235",
 
       // Continue below the baseline
-      "C 152 259 149 280 145 297",
+      "C 152 258.7 149 281.3 145 299.6",
 
       // Curve toward the bottom of the descender
-      "C 141 315 133 326 121 330",
+      "C 141 319 133 330.8 121 335.1",
 
       // Large rounded sweep toward the left
-      "C 108 335 91 334 76 329",
+      "C 108 340.5 91 339.4 76 334",
     ].join(" "),
   ],
 

@@ -1,23 +1,18 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase k — two strokes.
  *
- * Stroke 1:
- * Starts at the top/ascender line and travels downward
- * with a slight leftward slant to the baseline.
- *
- * Stroke 2:
- * Starts near the stem at x-height, curves into a
- * rounded loop, approaches the stem at the waist with
- * a small gap (not touching), then sweeps down and
- * right into the exit tail.
- *
- * Reference:
- * 1 = long downward stem
- * 2 = loop + lower arm + exit tail
+ * Client-adjusted version:
+ * - Stroke 1 is straight / vertical.
+ * - Stroke 2 connects directly to Stroke 1.
+ * - Keeps the rounded k shape.
+ * - Shorter exit tail.
  */
 export const letterLowerK: LetterDefinition = {
   id: "k",
@@ -43,48 +38,46 @@ export const letterLowerK: LetterDefinition = {
     /**
      * STROKE 1
      *
-     * Ascender line → baseline.
-     * Slight leftward slant like the worksheet.
+     * Straight vertical stem:
+     * ascender line → baseline.
      */
     [
       // Start at top / ascender line
-      "M 108 66",
+      "M 100 59",
 
-      // Long descending stem
-      "C 104 94 100 124 96 154",
-
-      // Continue toward baseline
-      "C 92 184 86 214 80 234",
+      // Straight down to baseline
+      "L 100 238.7",
     ].join(" "),
 
     /**
      * STROKE 2
      *
-     * Start near the stem at x-height → rise into
-     * rounded loop → smooth open waist (small gap from
-     * the stem, no sharp pinch) → lower arm → exit tail.
+     * Slightly separated from Stroke 1.
      */
     [
-      // Start near the stem, around x-height / line 2
-      "M 94 168",
+      // Start just slightly to the right of the vertical stem
+      "M 104 168.1",
 
-      // Sweep upward/right into the top of the loop
-      "C 108 156 124 152 140 158",
+      // Sweep upward/right into the top loop
+      "C 114 156 127 152 140 157.4",
 
       // Rounded top/right side
-      "C 154 164 158 176 152 188",
+      "C 154 163.8 158 176.7 152 189.5",
 
-      // Come left toward the waist — stay off the stem
-      "C 146 200 134 206 122 202",
+      // Return toward the waist
+      "C 145 201 132 205 120 204",
 
-      // Smooth open turn into the lower arm (no cusp)
-      "C 114 199 116 208 128 220",
+      // Come close to Stroke 1, but leave a very small gap
+      "C 112 203 107 201 104 202",
 
-      // Rounded lower section toward baseline
-      "C 140 232 152 238 164 237",
+      // Move out into the lower arm
+      "C 111 207 119 216 130 223.7",
 
-      // Exit tail rises to the right
-      "C 176 236 188 228 198 218",
+      // Rounded lower arm toward baseline
+      "C 142 236.6 153 242.5 163 241.5",
+
+      // Shorter exit tail
+      "C 170 240.8 176 236.5 181 230.5",
     ].join(" "),
   ],
 
@@ -94,7 +87,5 @@ export const letterLowerK: LetterDefinition = {
 
   traceCoverage: 0.99,
 
-  // 1 = downward stem
-  // 2 = loop
   directionArrowFractions: [0.16, 0.30],
 };

@@ -16,6 +16,15 @@ import {
   type Point,
 } from "./letterTraceGeometry";
 
+/** Orange error stroke pulse — keep clear delay matched to this. */
+export const ERROR_PULSE_DURATION_S = 0.32;
+export const ERROR_PULSE_REPEAT = 4;
+export const ERROR_PULSE_REPEAT_DELAY_S = 0.04;
+export const ERROR_PULSE_TOTAL_MS = Math.ceil(
+  (ERROR_PULSE_REPEAT + 1) * ERROR_PULSE_DURATION_S * 1000 +
+    ERROR_PULSE_REPEAT * ERROR_PULSE_REPEAT_DELAY_S * 1000,
+);
+
 export type { Point } from "./letterTraceGeometry";
 export { coveredSegmentsPath, samplePathPoints } from "./letterTraceGeometry";
 
@@ -32,6 +41,8 @@ export type UseLetterTraceOptions = {
   onComplete?: () => void;
   /** Fires once each time the finger leaves the letter path (not every move). */
   onOffPath?: () => void;
+  /** Fires when the user starts a new stroke (pointer down). */
+  onStrokeStart?: () => void;
 };
 
 export function useLetterTrace({
@@ -44,6 +55,7 @@ export function useLetterTrace({
   enabled = true,
   onComplete,
   onOffPath,
+  onStrokeStart,
 }: UseLetterTraceOptions) {
   const [isDrawing, setIsDrawing] = useState(false);
   const [strokePoints, setStrokePoints] = useState<Point[]>([]);
@@ -69,6 +81,7 @@ export function useLetterTrace({
   const clearAttemptTimerRef = useRef<number | null>(null);
   const onCompleteRef = useRef(onComplete);
   const onOffPathRef = useRef(onOffPath);
+  const onStrokeStartRef = useRef(onStrokeStart);
 
   useEffect(() => {
     onCompleteRef.current = onComplete;
@@ -77,6 +90,10 @@ export function useLetterTrace({
   useEffect(() => {
     onOffPathRef.current = onOffPath;
   }, [onOffPath]);
+
+  useEffect(() => {
+    onStrokeStartRef.current = onStrokeStart;
+  }, [onStrokeStart]);
 
   useEffect(() => {
     return () => {
@@ -197,21 +214,28 @@ export function useLetterTrace({
         return { bestI, bestD };
       });
 
-      // Multi-stroke letters (e.g. f): finish stroke 1 before stroke 2 counts.
-      // Otherwise a pass through a crossing can accidentally complete a short
-      // second stroke (like f’s crossbar) while only drawing the stem.
-      const activePath = coveredRef.current.findIndex((row) => {
-        if (row.length === 0) return false;
+      // Credit the nearest incomplete stroke within tolerance (any order).
+      // Strict first-to-last order broke digraphs like “th” when the crossbar
+      // was drawn before/after the h. A local brush still prevents a single
+      // pass through a crossing from completing a short crossbar.
+      let activePath = -1;
+      let activeBestD = Infinity;
+      for (let i = 0; i < coveredRef.current.length; i++) {
+        const row = coveredRef.current[i];
+        if (!row || row.length === 0) continue;
         const ratio = row.filter(Boolean).length / row.length;
-        return ratio < coverageThreshold;
-      });
-      if (activePath < 0) return;
+        if (ratio >= coverageThreshold) continue;
+        const near = pathNearest[i];
+        if (!near || near.bestI < 0 || near.bestD > tolerance) continue;
+        if (near.bestD < activeBestD) {
+          activeBestD = near.bestD;
+          activePath = i;
+        }
+      }
 
-      const active = pathNearest[activePath];
       const onAnyPath = pathNearest.some((p) => p.bestD <= tolerance);
 
-      // Truly off the letter → soft error. On a later stroke early (e.g. f’s
-      // crossbar while the stem is still active) → ignore, don’t credit yet.
+      // Truly off the letter → soft error. On a finished stroke only → ignore.
       if (!onAnyPath) {
         setOffPath(true);
         if (!offPathSignaledRef.current) {
@@ -223,12 +247,17 @@ export function useLetterTrace({
           clearAttemptTimerRef.current = window.setTimeout(() => {
             clearAttemptTimerRef.current = null;
             clearAttempt();
-          }, 420);
+          }, ERROR_PULSE_TOTAL_MS);
         }
         return;
       }
 
-      if (!active || active.bestI < 0 || active.bestD > tolerance) {
+      if (activePath < 0) {
+        return;
+      }
+
+      const active = pathNearest[activePath];
+      if (!active || active.bestI < 0) {
         return;
       }
 
@@ -274,6 +303,7 @@ export function useLetterTrace({
       if (offPathSignaledRef.current) {
         clearAttempt();
       }
+      onStrokeStartRef.current?.();
       event.currentTarget.setPointerCapture(event.pointerId);
       drawingRef.current = true;
       setIsDrawing(true);
@@ -307,10 +337,9 @@ export function useLetterTrace({
       }
       drawingRef.current = false;
       setIsDrawing(false);
-      // If this stroke went off the letter, don't leave the ink behind
+      // Off-path already scheduled clearAttempt after the error pulse — don't
+      // wipe the orange stroke early when the pointer is released.
       if (offPathSignaledRef.current) {
-        cancelPendingClear();
-        clearAttempt();
         return;
       }
       // Keep finished freehand ink so multi-stroke letters (e.g. f) stay visible.
@@ -328,7 +357,7 @@ export function useLetterTrace({
       });
       setOffPath(false);
     },
-    [cancelPendingClear, clearAttempt],
+    [],
   );
 
   const reset = useCallback(() => {

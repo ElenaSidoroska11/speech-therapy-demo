@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { playLetterPractice } from "@/components/shared/sounds";
+import { playLetterPractice, playWatchHow } from "@/components/shared/sounds";
 import { LetterCategoryView } from "./LetterCategoryView";
 import { TraceLetterExercise } from "./TraceLetterExercise";
 import type { LetterStyle } from "./letterStyles";
@@ -26,15 +26,14 @@ export function LetterPractice({
   useEffect(() => {
     if (mode !== "categories") return;
 
-    let cancelLetterPractice: (() => void) | undefined;
+    let cancelCurrent: (() => void) | undefined;
 
-    const delayId = window.setTimeout(() => {
-      cancelLetterPractice = playLetterPractice();
-    }, 3000);
+    cancelCurrent = playLetterPractice(() => {
+      cancelCurrent = playWatchHow();
+    });
 
     return () => {
-      window.clearTimeout(delayId);
-      cancelLetterPractice?.();
+      cancelCurrent?.();
     };
   }, [mode]);
 

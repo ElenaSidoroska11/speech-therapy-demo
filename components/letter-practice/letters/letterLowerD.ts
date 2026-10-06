@@ -11,9 +11,8 @@ import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
  * Start at the blue dot → go UP to the top →
  * retrace DOWN the same stem → baseline → exit tail.
  *
- * Same path design as before, scaled onto the shared artboard.
- * Path is inset by half the stroke so the visible ink stays
- * on/inside topline (line 1) and baseline (line 3).
+ * Midway between a fully inset path and a path-centerline
+ * flush on topline (line 1) / baseline (line 3).
  */
 export const letterLowerD: LetterDefinition = {
   id: "d",
@@ -40,22 +39,22 @@ export const letterLowerD: LetterDefinition = {
     // It does NOT enter the tall stem.
     // ------------------------------------------------
     [
-      "M 135.1 156.3",
+      "M 135.1 156.6",
 
       // Across upper part of oval toward the left
-      "C 120.0 149.2 101.8 150.0 88.3 158.7",
+      "C 120.0 148.9 101.8 149.8 88.3 159.2",
 
       // Left side curves downward
-      "C 74.8 168.2 70.1 186.5 72.5 203.9",
+      "C 74.8 169.4 70.1 189.2 72.5 208.0",
 
       // Around bottom
-      "C 74.8 222.1 85.1 232.4 98.6 232.4",
+      "C 74.8 227.7 85.1 238.8 98.6 238.8",
 
       // Right side comes back upward
-      "C 114.5 232.4 127.1 218.9 131.9 202.3",
+      "C 114.5 238.8 127.1 224.2 131.9 206.3",
 
       // Finish exactly at the blue dot
-      "C 135.8 187.2 137.4 169.8 135.1 156.3",
+      "C 135.8 190.0 137.4 171.2 135.1 156.6",
     ].join(" "),
 
     // ------------------------------------------------
@@ -65,23 +64,23 @@ export const letterLowerD: LetterDefinition = {
     // ------------------------------------------------
     [
       // Start exactly at blue dot
-      "M 135.1 156.3",
+      "M 135.1 156.6",
 
       // Go UP the tall stem
-      "C 139.0 131.8 143.0 104.0 147.7 75.5",
+      "C 139.0 130.1 143.0 100.1 147.7 69.3",
 
-      // Reach top (inset so ink sits on line 1)
-      "C 149.3 67.6 151.7 66.0 153.3 70.8",
+      // Reach top (near line 1)
+      "C 149.3 60.7 151.7 59.0 153.3 64.2",
 
       // Retrace DOWN almost directly over the same line
-      "C 150.1 92.2 146.2 119.1 142.2 145.2",
-      "C 139.0 168.2 135.8 193.6 133.5 215.8",
+      "C 150.1 87.3 146.2 116.4 142.2 144.6",
+      "C 139.0 169.4 135.8 196.9 133.5 220.9",
 
-      // Reach baseline (inset so ink sits on line 3)
-      "C 132.7 227.7 135.1 233.2 141.4 234.0",
+      // Reach baseline (near line 3)
+      "C 132.7 233.7 135.1 239.7 141.4 240.5",
 
       // Exit tail curves upward/right
-      "C 149.3 234.8 158.8 227.7 169.9 217.4",
+      "C 149.3 241.4 158.8 233.7 169.9 222.6",
     ].join(" "),
   ],
 

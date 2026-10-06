@@ -1,20 +1,27 @@
 import type { LetterDefinition } from "./types";
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
- * Cursive (Victoria Modern Script) lowercase b — one continuous stroke.
+ * Victoria Modern Script lowercase b — one continuous stroke.
  *
- * Starts at the ascender line, travels down the stem to the baseline,
- * curves up through an open bowl to x-height, then finishes with a
- * short horizontal exit flick to the right (worksheet-style join).
+ * Client-adjusted:
+ * - Straight stem
+ * - Very rounded semicircular bottom
+ * - Smooth transition into the bowl
  *
- * Same path design as before, uniformly scaled so the visible ink
- * (path ± half stroke) stays on/inside line 1 and line 3.
+ * Same client path, shifted up so it does not cross baseline (line 3).
  */
 export const letterLowerB: LetterDefinition = {
   id: "b",
+
   letter: "b",
+
   spokenName: "the letter B",
+
   acceptTranscripts: [
     "b",
     "bee",
@@ -25,27 +32,42 @@ export const letterLowerB: LetterDefinition = {
   ],
 
   viewBox: LOWERCASE_ARTBOARD.viewBox,
+
   fitAspectRatio: LOWERCASE_ARTBOARD.fitAspectRatio,
+
   rulingLines: lowercaseRulingLines(),
 
   strokePaths: [
-    // Stem down → open bowl up to x-height → exit continues right under midline
     [
-      // Nearly vertical stem — no left heel at the baseline
-      "M 102 66",
-      "L 100 222",
-      // Curve into baseline (line 3) and through the open bowl
-      "C 100 238 124 238 148 210",
-      "C 166 186 172 172 174 164",
-      // Exit continues from the bowl, under line 2
-      "C 176 160 186 160 200 162",
+      // Straight stem down
+      "M 102 52",
+      "L 102 207",
+
+      // Continue vertically before rounding
+      "C 102 223 102 233 108 239",
+
+      // Wider and deeper semicircular bottom
+      "C 114 246 126 248 138 242",
+
+      // Smooth rounded rise on the right
+      "C 151 236 160 223 166 208",
+
+      // Continue smoothly into the bowl
+      "C 172 191 174 169 174 150",
+
+      // Small rounded exit tail
+      "C 175 145 178 144 182 146",
+
+      // Finish almost horizontally
+      "C 188 149 195 150 202 147",
     ].join(" "),
   ],
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
+
   traceTolerance: 36,
+
   traceCoverage: 0.99,
 
-  // 1 = down stem, 2 = up through bowl / exit
   directionArrowFractions: [0.12, 0.58],
 };

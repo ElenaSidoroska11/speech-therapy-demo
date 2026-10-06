@@ -5,17 +5,20 @@ import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
 /**
  * Victoria Modern Script lowercase t — two strokes.
  *
+ * Straight / upright version.
+ *
  * Stroke 1:
- * Starts above line 2 (x-height) so the stem protrudes.
- * Travels downward with a slight leftward slant.
- * Reaches the baseline, curves smoothly around the bottom,
- * then rises diagonally to the right into the exit tail.
+ * Starts above line 2 (x-height).
+ * Travels STRAIGHT vertically downward toward the baseline.
+ * At the bottom it forms a smooth rounded turn,
+ * then finishes with the original exit tail to the right.
  *
  * Stroke 2:
- * A separate horizontal crossbar on line 2 (x-height),
+ * A separate straight horizontal crossbar on line 2,
  * drawn from left to right.
+ *
+ * The cursive/slanted stem has been removed.
  */
-
 export const letterLowerT: LetterDefinition = {
   id: "t",
 
@@ -41,28 +44,28 @@ export const letterLowerT: LetterDefinition = {
 
   strokePaths: [
     [
-      // Stroke 1 — start above line 2 (x-height) so the stem protrudes
+      // Stroke 1 — start above line 2
       "M 130 118",
 
-      // Descend with a slight leftward slant
-      "C 127 145 123 175 119 199",
+      // Completely straight vertical descent
+      "C 130 145 130 175 130 199",
 
-      // Continue toward baseline
-      "C 116 216 112 229 113 236",
+      // Continue straight toward baseline
+      "C 130 216 130 229 130 236",
 
-      // Large rounded bottom turn
-      "C 114 246 122 251 132 248",
+      // Smooth rounded bottom turn
+      "C 130 245 136 249 144 247",
 
-      // Sweep upward and right
-      "C 142 245 151 236 160 227",
+      // Smooth exit tail upward/right
+      "C 151 245 157 237 163 228",
     ].join(" "),
 
     [
-      // Stroke 2 — crossbar on line 2 (midline / x-height), left → right
+      // Stroke 2 — straight horizontal crossbar
       "M 103 150",
 
-      // Slightly softened horizontal stroke
-      "C 120 150 139 150 158 150",
+      // Left → right, completely horizontal
+      "C 121 150 140 150 159 150",
     ].join(" "),
   ],
 

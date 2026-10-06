@@ -8,6 +8,8 @@ import {
 /**
  * Victoria Modern Script lowercase o — one continuous stroke.
  *
+ * Upright / straightened version.
+ *
  * Stroke 1:
  * Starts at the upper-right of the oval near x-height.
  * Travels counterclockwise:
@@ -16,8 +18,9 @@ import {
  * up right side → closes at the starting point →
  * short exit tail to the right.
  *
- * Path spans midline (line 2) → baseline (line 3) so the
- * visible guide stroke touches both ruling lines.
+ * The oval is vertically balanced so it does not appear slanted.
+ *
+ * Path spans midline (line 2) → baseline (line 3).
  *
  * Reference:
  * 1 = counterclockwise oval + exit tail
@@ -45,33 +48,36 @@ export const letterLowerO: LetterDefinition = {
 
   strokePaths: [
     [
-      // Start at upper-right — top of oval on midline (line 2)
-      "M 132 167.4",
+      // Start at upper-right near x-height
+      "M 132 164",
 
-      // Travel LEFT across the rounded top (touches line 2)
-      "C 118 159.7 100 158.1 86 164.3",
+      // Rounded top — travel left
+      "C 120 156 102 155 88 161",
 
-      // Curve down the left side
-      "C 70 172.1 64 189.2 66 206.3",
+      // Straight / balanced left side
+      "C 73 168 66 185 66 203",
 
-      // Continue down toward baseline (line 3)
-      "C 68 224.9 78 235.8 92 237.3",
+      // Continue smoothly toward baseline
+      "C 66 224 76 239 91 242",
 
-      // Round the bottom of the oval on the baseline
-      "C 108 238.9 122 229.6 128 214",
+      // Rounded bottom — centered under the top
+      "C 107 245 122 236 129 219",
 
-      // Travel upward along the right side
-      "C 134 198.5 136 181.4 132 167.4",
+      // Upright right side
+      "C 136 202 137 181 132 164",
 
-      // Close near the starting point and begin exit
-      "C 140 170.5 148 172.1 158 170.5",
+      // Close the oval and begin exit
+      "C 139 168 146 169 153 168",
 
-      // Short, slightly upward/right exit tail
-      "C 168 169.8 176 167.4 184 164.3",
+      // Short smooth exit tail
+      "C 161 167 168 164 175 161",
     ].join(" "),
   ],
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
+
+  // Match m/n tile size — o’s tight bbox otherwise fills the card larger
+  previewScale: 0.8,
 
   traceTolerance: 36,
 

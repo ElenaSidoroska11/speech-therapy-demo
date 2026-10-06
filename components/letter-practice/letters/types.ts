@@ -81,6 +81,11 @@ export type LetterDefinition = {
   strokePaths: string[];
   /** Stroke width relative to the viewBox */
   strokeWidth: number;
+  /**
+   * Picker/header glyph size vs default ink-fill (1). Values under 1
+   * zoom out so short letters don’t dominate the tile.
+   */
+  previewScale?: number;
   /** How close (in SVG units) a pointer must be to count as on-path */
   traceTolerance: number;
   /** Fraction of samples that must be covered on *each* path to succeed (0–1) */

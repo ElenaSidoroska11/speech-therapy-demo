@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { playPhonemeSound, playWatchHow } from "@/components/shared/sounds";
+import { playPhonemeSound } from "@/components/shared/sounds";
 import type { LetterId } from "../letters";
 
 const INTRO_DELAY_MS = 3000;
@@ -11,7 +11,6 @@ export function useLetterDemo(letterId: LetterId, phonemeSound?: string) {
   const demoReadyRef = useRef(false);
   const introStartedRef = useRef(false);
   const replayTimeoutRef = useRef<number>(0);
-  const cancelWatchHowRef = useRef<(() => void) | null>(null);
 
   const tryStartDemo = useCallback(() => {
     if (demoReadyRef.current && introStartedRef.current) {
@@ -24,21 +23,15 @@ export function useLetterDemo(letterId: LetterId, phonemeSound?: string) {
     introStartedRef.current = false;
     setDemoProgress(0);
     window.clearTimeout(replayTimeoutRef.current);
-    cancelWatchHowRef.current?.();
-    cancelWatchHowRef.current = null;
 
     const delayId = window.setTimeout(() => {
-      cancelWatchHowRef.current = playWatchHow(() => {
-        if (phonemeSound) playPhonemeSound(phonemeSound);
-      });
+      if (phonemeSound) playPhonemeSound(phonemeSound);
       introStartedRef.current = true;
       tryStartDemo();
     }, INTRO_DELAY_MS);
 
     return () => {
       window.clearTimeout(delayId);
-      cancelWatchHowRef.current?.();
-      cancelWatchHowRef.current = null;
     };
   }, [letterId, phonemeSound, tryStartDemo]);
 
