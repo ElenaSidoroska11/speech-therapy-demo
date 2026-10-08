@@ -37,10 +37,18 @@ export function LetterStrokeFrame({
       <div className={`relative min-h-0 w-full flex-1 ${maxWidth}`}>
         <div className="absolute inset-0 rounded-4xl bg-white/55 shadow-[0_10px_0_rgba(15,118,110,0.12)] ring-2 ring-white/70 backdrop-blur-sm" />
         {fitAspectRatio ? (
-          <div className="absolute inset-x-[3%] top-[2%] bottom-[4%] grid place-items-center">
+          <div
+            className="absolute inset-x-[3%] top-[2%] bottom-[4%] grid place-items-center overflow-hidden"
+            style={{ containerType: "size" }}>
+            {/* Size from both axes. Width-only + aspect-ratio ignores the short
+                mobile card and the artboard spills into the gap between cards. */}
             <div
-              className="min-h-0 min-w-0 w-full"
-              style={{ aspectRatio: fitAspectRatio, maxHeight: "100%" }}>
+              className="min-h-0 min-w-0"
+              style={{
+                aspectRatio: fitAspectRatio,
+                width: `min(100cqw, calc(100cqh * ${fitAspectRatio}))`,
+                height: `min(100cqh, calc(100cqw / ${fitAspectRatio}))`,
+              }}>
               {children}
             </div>
           </div>

@@ -13,6 +13,7 @@ import { letterLowerJ } from "./letterLowerJ";
 import { letterLowerK } from "./letterLowerK";
 import { letterLowerL } from "./letterLowerL";
 import { letterLowerM } from "./letterLowerM";
+import { letterLowerN } from "./letterLowerN";
 /**
  * Registry of unjoined print practice letters.
  * To add one: create `letterLowerX.ts` and register it here.
@@ -33,6 +34,7 @@ export const PRINT_LETTERS = {
   k: letterLowerK,
   l: letterLowerL,
   m: letterLowerM,
+  n: letterLowerN,
 } as const satisfies Partial<Record<LetterId, LetterDefinition>>;
 
 /** Only ids present in `PRINT_LETTERS`. */

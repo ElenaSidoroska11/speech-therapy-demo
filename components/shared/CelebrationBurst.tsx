@@ -5,18 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { playYayy } from "@/components/shared/sounds";
 
-const PIECES = [
-  "⭐",
-  "✨",
-  "🎉",
-  "💛",
-  "🌟",
-  "🎈",
-  "❤️",
-  "❤️",
-  "🎊",
-  "☀️",
-];
+const PIECES = ["⭐", "✨", "🎉", "💛", "🌟", "🎈", "❤️", "❤️", "🎊", "☀️"];
 
 const BURST_COUNT = 24;
 
@@ -72,8 +61,7 @@ export function CelebrationBurst() {
                 y: [0, yDrift],
                 rotate: [0, rotate, 0],
               }}
-              transition={burstTransition}
-            >
+              transition={burstTransition}>
               {emoji}
             </motion.span>
           );
@@ -85,8 +73,7 @@ export function CelebrationBurst() {
         style={{ left: "50%", top: "40%" }}
         initial={{ opacity: 0, y: 0, scale: 0.5, rotate: 0 }}
         animate={burstMotion}
-        transition={burstTransition}
-      >
+        transition={burstTransition}>
         <Image
           src="/kids-yay.png"
           alt=""

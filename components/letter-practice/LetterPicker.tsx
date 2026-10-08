@@ -8,7 +8,7 @@ import {
 import { LetterGlyphPreview } from "./LetterGlyphPreview";
 
 const SIDEBAR_BUTTON =
-  "flex w-full items-center justify-center rounded-xl ring-2 transition";
+  "flex items-center justify-center rounded-xl ring-2 transition";
 
 type LetterPickerProps = {
   letterId?: LetterId;
@@ -29,24 +29,28 @@ function LetterPickerContent({
   id,
   display,
   selected,
-  dense,
+  size,
   resolveLetter,
 }: {
   id: LetterId;
   display: "text" | "glyph";
   selected: boolean;
-  dense?: boolean;
+  size: "compact" | "sidebar" | "panel";
   resolveLetter: (id: LetterId) => LetterDefinition;
 }) {
   const letter = resolveLetter(id);
   const glyphStroke = selected ? "#FFFFFF" : "#FDA702";
 
   if (display === "glyph") {
+    const glyphBox =
+      size === "panel"
+        ? "h-9 w-9 sm:h-11 sm:w-11"
+        : size === "sidebar"
+          ? "absolute inset-1"
+          : "h-6 w-6";
+
     return (
-      <span
-        className={`inline-flex items-center justify-center ${
-          dense ? "h-9 w-9 sm:h-11 sm:w-11" : "h-6 w-6"
-        }`}>
+      <span className={`inline-flex items-center justify-center ${glyphBox}`}>
         <LetterGlyphPreview letter={letter} stroke={glyphStroke} className="h-full w-full" />
       </span>
     );
@@ -55,7 +59,7 @@ function LetterPickerContent({
   return (
     <span
       className={`font-extrabold leading-none ${
-        dense ? "text-2xl sm:text-3xl" : "text-xl"
+        size === "panel" ? "text-2xl sm:text-3xl" : size === "sidebar" ? "text-2xl" : "text-xl"
       }`}>
       {letter.letter}
     </span>
@@ -63,7 +67,7 @@ function LetterPickerContent({
 }
 
 const GRID_BY_VARIANT = {
-  sidebar: "grid grid-cols-5 gap-2",
+  sidebar: "grid grid-cols-5 justify-items-center gap-2",
   // Wider panel: more letters per row so the card stays shorter on screen
   panel: "grid grid-cols-6 gap-1.5 sm:grid-cols-7 sm:gap-2 md:grid-cols-9",
 } as const;
@@ -81,7 +85,6 @@ export function LetterPicker({
   isLetterSelectable = isSelectableLetter,
 }: LetterPickerProps) {
   const tiled = variant === "sidebar" || variant === "panel";
-  const dense = variant === "panel";
   const hasLetters = letters.length > 0;
   const hasPlaceholders = placeholderCount > 0;
 
@@ -96,15 +99,16 @@ export function LetterPicker({
       {letters.map((id) => {
         const enabled = !disabled && isLetterSelectable(id);
         const selected = enabled && id === letterId;
+        const tilePad = variant === "sidebar" ? "relative w-[92%]" : "w-full p-1";
         const shape = tiled
-          ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
+          ? `${SIDEBAR_BUTTON} aspect-square ${tilePad}`
           : "rounded-xl px-2.5 py-1 text-sm font-extrabold ring-2";
         const content = (
           <LetterPickerContent
             id={id}
             display={display}
             selected={selected}
-            dense={dense}
+            size={variant}
             resolveLetter={resolveLetter}
           />
         );
@@ -138,7 +142,9 @@ export function LetterPicker({
         <div
           key={`placeholder-${i}`}
           aria-hidden
-          className={`${SIDEBAR_BUTTON} aspect-square bg-white/30 text-transparent ring-white/30`}
+          className={`${SIDEBAR_BUTTON} aspect-square bg-white/30 text-transparent ring-white/30 ${
+            variant === "sidebar" ? "w-[92%]" : "w-full"
+          }`}
         />
       ))}
     </div>
