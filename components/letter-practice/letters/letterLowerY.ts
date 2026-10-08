@@ -1,22 +1,28 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase y — two strokes.
  *
+ * Straight / upright version.
+ *
  * Stroke 1:
  * Starts at x-height on the left.
- * Travels downward with a slight leftward slant,
- * forms a smooth rounded bottom at the baseline,
+ * Travels STRAIGHT vertically downward,
+ * forms a smooth rounded bottom,
  * then rises back up to x-height.
  *
  * Stroke 2:
  * Starts at x-height on the right.
- * Travels downward through the baseline and continues
+ * Travels STRAIGHT vertically downward,
+ * passes through the baseline and continues
  * into the descender area.
- * At the bottom it forms a large rounded curve
- * sweeping toward the left along the descender line.
+ * At the bottom it forms the original large
+ * rounded curve sweeping toward the left.
  */
 
 export const letterLowerY: LetterDefinition = {
@@ -47,34 +53,35 @@ export const letterLowerY: LetterDefinition = {
       // Stroke 1 — start at x-height on the left
       "M 105 157.5",
 
-      // Descend with a slight leftward slant
-      "C 102 178 98 200.6 98 215.6",
+      // Straight vertical downstroke
+      "C 105 178 105 200.6 105 215.6",
 
-      // Rounded bottom of the u-shape
-      "C 98 228.5 104 235 114 235",
+      // Smooth rounded bottom
+      "C 105 228.5 111 235 121 235",
 
-      // Sweep right and begin rising
-      "C 126 235 137 224.2 145 210.2",
+      // Rounded turn and rise
+      "C 133 235 143 224.2 151 210.2",
 
-      // Rise back to x-height
-      "C 155 193 161 173.6 165 157.5",
+      // Smooth upright rise back to x-height
+      "C 160 193 164 173.6 165 157.5",
     ].join(" "),
 
     [
       // Stroke 2 — start at x-height on the right
       "M 165 157.5",
 
-      // Descend along the right stem
-      "C 162 182.3 158 210.2 155 235",
+      // Straight vertical downstroke
+      "C 165 182.3 165 210.2 165 235",
 
-      // Continue below the baseline
-      "C 152 258.7 149 281.3 145 299.6",
+      // Continue straight through the baseline
+      // into the descender area
+      "C 165 258.7 165 281.3 162 299.6",
 
-      // Curve toward the bottom of the descender
-      "C 141 319 133 330.8 121 335.1",
+      // Begin the rounded descender turn
+      "C 159 318 150 330.8 138 335.1",
 
-      // Large rounded sweep toward the left
-      "C 108 340.5 91 339.4 76 334",
+      // Large smooth rounded sweep toward the left
+      "C 124 340.5 96 339.4 76 334",
     ].join(" "),
   ],
 
@@ -85,6 +92,6 @@ export const letterLowerY: LetterDefinition = {
   traceCoverage: 0.99,
 
   // Stroke 1: downward from x-height
-  // Stroke 2: downward through the descender
+  // Stroke 2: straight downward through the descender
   directionArrowFractions: [0.13, 0.27],
 };

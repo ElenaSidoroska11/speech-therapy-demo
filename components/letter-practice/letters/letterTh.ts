@@ -1,20 +1,28 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase "th" digraph.
  *
+ * Straight / upright version.
+ *
  * The t and h are the SAME HEIGHT:
- * both main stems start at the ascender line.
+ * both stems start at the ascender line.
  *
- * STROKE 1 — t main stroke
- * STROKE 2 — t crossbar
- * STROKE 3 — h stem
- * STROKE 4 — h hump
+ * STROKE 1 — t main stroke:
+ * Straight vertical stem → rounded bottom → exit toward h.
  *
- * Trace scoring allows any incomplete stroke within tolerance (see
- * useLetterTrace), so crossing the t before or after the h both work.
+ * STROKE 2 — t crossbar.
+ *
+ * STROKE 3 — h stem:
+ * Completely straight vertical stem.
+ *
+ * STROKE 4 — h hump:
+ * Same shape as the standalone lowercase h.
  */
 
 export const letterTh: LetterDefinition = {
@@ -42,16 +50,23 @@ export const letterTh: LetterDefinition = {
     /**
      * STROKE 1 — t main stroke
      *
-     * Raised so the t starts at the same height as the h.
-     * Starts at y=59, exactly like the h stem.
+     * Straight / upright.
      */
     [
+      // Start at ascender line
       "M 82 59",
-      "C 80 86 78 113 76 140",
-      "C 74 168 71 194 68 215",
-      "C 66 226 64 234 65 239",
-      "C 66 247 74 251 84 248",
-      "C 94 245 103 236 112 227",
+
+      // Completely straight vertical stem
+      "L 82 215",
+
+      // Begin rounded bottom
+      "C 82 230 84 239 90 242",
+
+      // Smooth rounded turn
+      "C 97 246 104 241 111 235",
+
+      // Handwritten connection toward h
+      "C 119 228 126 219 134 210",
     ].join(" "),
 
     /**
@@ -59,29 +74,57 @@ export const letterTh: LetterDefinition = {
      */
     [
       "M 55 150",
-      "C 72 150 91 150 110 150",
+
+      // Straight horizontal crossbar
+      "L 110 150",
     ].join(" "),
 
     /**
      * STROKE 3 — h stem
+     *
+     * Same height as t.
+     * Completely straight / vertical.
      */
     [
-      "M 151 59",
-      "C 146 88.7 140 121.2 134 153.7",
-      "C 128 187.2 121 216.8 115 241",
+      // Start at ascender line
+      "M 134 59",
+
+      // Straight to baseline
+      "L 134 241",
     ].join(" "),
 
     /**
      * STROKE 4 — h hump
+     *
+     * Same h shape as the standalone lowercase h.
      */
     [
-      "M 115 241",
-      "C 121 224.5 128 204.4 134 181.6",
-      "C 140 170.8 150 165.2 162 165.2",
-      "C 179 165.2 190 173.4 191 184.8",
-      "C 192 197.5 185 212 182 223.9",
-      "C 179 235.4 181 241 189 241",
-      "C 199 241 212 238.5 225 229",
+      // Start at bottom of h stem
+      "M 134 241",
+
+      // Retrace straight upward
+      "L 134 181",
+
+      // Continue to x-height
+      "L 134 164",
+
+      // Smooth transition into hump
+      "C 136 159 144 157 156 157",
+
+      // Rounded hump
+      "C 178 157 193 165 194 184",
+
+      // Almost straight downward
+      "C 194 199 194 216 194 226",
+
+      // Begin rounded bottom
+      "C 194 235 197 241 204 241",
+
+      // Rounded semicircle-like turn
+      "C 212 241 218 237 223 232",
+
+      // Smooth upward/right exit
+      "C 227 228 231 224 235 220",
     ].join(" "),
   ],
 
@@ -91,6 +134,9 @@ export const letterTh: LetterDefinition = {
 
   traceCoverage: 0.99,
 
-  // 1 = t main, 2 = crossbar, 3 = h stem, 4 = h hump
+  // 1 = t main
+  // 2 = t crossbar
+  // 3 = h stem
+  // 4 = h hump
   directionArrowFractions: [0.15, 0.5, 0.12, 0.42],
 };

@@ -1,13 +1,18 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Script lowercase "wh" digraph.
  *
+ * Straight / upright connected version.
+ *
  * STROKE 1 — w first valley
- * STROKE 2 — w second valley + exit (exit folded in so it can't block the h)
- * STROKE 3 — h stem
+ * STROKE 2 — w second valley + original rightward exit
+ * STROKE 3 — h straight stem
  * STROKE 4 — h hump
  */
 
@@ -44,48 +49,97 @@ export const letterWh: LetterDefinition = {
   strokePaths: [
     /**
      * STROKE 1 — w first section
+     *
+     * Same w shape, only straightened.
      */
     [
-      "M 35 157.5",
-      "C 33 178.3 30 205.9 30 222.1",
-      "C 29 235.9 34 244 42 244",
-      "C 51 244 59 234.8 66 219.8",
-      "C 74 201.3 79 178.3 83 157.5",
+      // Start at x-height
+      "M 7 157.5",
+
+      // Straight vertical downstroke
+      "C 7 178.3 7 205.9 7 222.1",
+
+      // First rounded bottom
+      "C 7 235.9 12 244 20 244",
+
+      // Sweep right along bottom
+      "C 29 244 37 234.8 44 219.8",
+
+      // Rise to x-height
+      "C 52 201.3 54 178.3 55 157.5",
     ].join(" "),
 
     /**
-     * STROKE 2 — w second section + finishing exit
+     * STROKE 2 — w second section
+     *
+     * Same shape + original rightward finishing exit.
      */
     [
-      "M 83 157.5",
-      "C 81 179.4 78 205.9 78 222.1",
-      "C 77 235.9 82 244 90 244",
-      "C 99 244 107 234.8 114 219.8",
-      "C 122 201.3 127 178.3 131 157.5",
-      // Exit toward h (same geometry as before, not a separate gated stroke)
-      "C 137 159 143 160 149 157.5",
+      // Start at x-height
+      "M 55 157.5",
+
+      // Straight vertical downstroke
+      "C 55 179.4 55 205.9 55 222.1",
+
+      // Second rounded bottom
+      "C 55 235.9 60 244 68 244",
+
+      // Sweep right along bottom
+      "C 77 244 85 234.8 92 219.8",
+
+      // Rise back to x-height
+      "C 100 201.3 102 178.3 103 157.5",
+
+      // Original finishing stroke:
+      // continues RIGHT from the top of w
+      "C 109 159 115 160 121 157.5",
     ].join(" "),
 
     /**
      * STROKE 3 — h stem
+     *
+     * Completely straight / vertical.
      */
     [
-      "M 174 59",
-      "C 170 88.7 166 121.2 162 153.7",
-      "C 158 187.2 153 216.8 149 241",
+      // Start at ascender line
+      "M 136 59",
+
+      // Straight vertical stem
+      "L 136 241",
     ].join(" "),
 
     /**
      * STROKE 4 — h hump
+     *
+     * Same shape as standalone lowercase h.
      */
     [
-      "M 149 241",
-      "C 153 224.5 158 204.4 162 181.6",
-      "C 166 170.8 173 165.2 182 165.2",
-      "C 195 165.2 203 173.4 204 184.8",
-      "C 205 197.5 200 212 198 223.9",
-      "C 196 235.4 198 241 204 241",
-      "C 212 241 221 238.5 230 229",
+      // Start at bottom of h stem
+      "M 136 241",
+
+      // Retrace straight upward
+      "L 136 181",
+
+      // Continue to x-height
+      "L 136 164",
+
+      // Smooth transition into hump
+      "C 138 159 146 157 158 157",
+
+      // Rounded hump
+      "C 180 157 195 165 196 184",
+
+      // Go almost straight down
+      "C 196 199 196 216 196 226",
+
+      // Begin rounded bottom
+      "C 196 235 199 241 206 241",
+
+      // Continue rounded semicircle-like turn
+      "C 214 241 220 237 225 232",
+
+      // Smooth upward/right exit
+      "C 229 228 233 224 237 220",
     ].join(" "),
   ],
 
@@ -95,6 +149,9 @@ export const letterWh: LetterDefinition = {
 
   traceCoverage: 0.99,
 
-  // 1 = w first, 2 = w second+exit, 3 = h stem, 4 = h hump
+  // 1 = w first
+  // 2 = w second + rightward exit
+  // 3 = h stem
+  // 4 = h hump
   directionArrowFractions: [0.12, 0.12, 0.12, 0.42],
 };

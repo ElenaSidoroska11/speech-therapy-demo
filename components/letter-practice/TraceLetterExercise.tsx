@@ -11,6 +11,8 @@ import {
   useLetterTrace,
 } from "./hooks/useLetterTrace";
 import { getLetter, getNextLetter, type LetterId } from "./letters";
+import { getNextPrintLetter, getPrintLetter } from "./letters-print";
+import type { LetterStyle } from "./letterStyles";
 import {
   CENTER_BODY_SLOT,
   CENTER_CONTENT_WIDTH,
@@ -20,12 +22,14 @@ import {
 
 type TraceLetterExerciseProps = {
   initialLetter?: LetterId;
+  letterStyle?: LetterStyle;
   onNextLetter?: (letterId: LetterId) => void;
   layout?: "stacked" | "landing";
 };
 
 export function TraceLetterExercise({
   initialLetter = "a",
+  letterStyle = "victorian",
   onNextLetter,
   layout = "stacked",
 }: TraceLetterExerciseProps) {
@@ -33,7 +37,8 @@ export function TraceLetterExercise({
   const [session, setSession] = useState(0);
   const [celebrate, setCelebrate] = useState(false);
   const [errorPulse, setErrorPulse] = useState(0);
-  const letter = getLetter(letterId);
+  const letter =
+    letterStyle === "unjoined" ? getPrintLetter(letterId) : getLetter(letterId);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
   const errorPulseClearTimerRef = useRef<number | null>(null);
@@ -114,7 +119,10 @@ export function TraceLetterExercise({
     setSession((n) => n + 1);
   };
 
-  const nextLetter = getNextLetter(letterId);
+  const nextLetter =
+    letterStyle === "unjoined"
+      ? getNextPrintLetter(letterId)
+      : getNextLetter(letterId);
   const wideLetter = letter.letter.length > 1;
 
   const header = <TraceExerciseHeader letter={letter} />;

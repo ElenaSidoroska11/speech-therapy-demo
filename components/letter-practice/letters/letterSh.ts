@@ -1,23 +1,28 @@
 import type { LetterDefinition } from "./types";
 
-import { LOWERCASE_ARTBOARD, lowercaseRulingLines } from "./artboard";
+import {
+  LOWERCASE_ARTBOARD,
+  lowercaseRulingLines,
+} from "./artboard";
 
 /**
  * Victoria Modern Cursive lowercase "sh" digraph.
  *
+ * Straight / upright connected version.
+ *
  * STROKE 1 — s:
  * Starts at x-height on the upper-right.
- * Curves left into the top of the s, travels down through
- * the centre, forms the lower curve, then exits right.
+ * Forms the rounded s shape and continues
+ * naturally toward the h.
  *
  * STROKE 2 — h stem:
- * Starts at the ascender line and travels downward
- * with a slight leftward slant to the baseline.
+ * Straight vertical stem from ascender line to baseline.
  *
  * STROKE 3 — h hump:
- * Starts at the bottom of the stem, retraces upward
- * to x-height, forms the rounded hump, descends to
- * the baseline, then finishes with an exit tail.
+ * Same shape as the standalone lowercase h.
+ * Retraces straight upward → rounded hump →
+ * straight downward section → rounded bottom →
+ * exit tail.
  */
 
 export const letterSh: LetterDefinition = {
@@ -47,8 +52,7 @@ export const letterSh: LetterDefinition = {
     /**
      * STROKE 1 — lowercase s
      *
-     * x-height → upper curve → centre →
-     * lower curve → exit toward h.
+     * Rounded s with handwritten connection to h.
      */
     [
       // Start at upper-right at x-height
@@ -78,53 +82,58 @@ export const letterSh: LetterDefinition = {
       // Exit upward/right
       "C 96 223 104 220 111 213",
 
-      // Connection toward h
-      "C 116 208 120 202 124 197",
+      // Continue toward h
+      "C 117 207 123 201 128 196",
+
+      // Smooth handwritten connection into h stem
+      "C 131 192 133 188 134 184",
     ].join(" "),
 
     /**
      * STROKE 2 — h stem
      *
-     * Ascender line → baseline.
+     * Completely straight / vertical.
      */
     [
-      // Start at ascender/top line
-      "M 154 59",
+      // Start at ascender line
+      "M 134 59",
 
-      // Slight leftward slant
-      "C 149 88.7 143 121.2 137 153.7",
-
-      // Continue to baseline
-      "C 131 187.2 124 216.8 118 241",
+      // Straight vertical stem to baseline
+      "L 134 241",
     ].join(" "),
 
     /**
      * STROKE 3 — h hump
      *
-     * Retrace upward → x-height →
-     * hump → baseline → exit tail.
+     * Same shape as standalone lowercase h.
      */
     [
       // Start at bottom of h stem
-      "M 118 241",
+      "M 134 241",
 
-      // Retrace upward
-      "C 124 224.5 131 204.4 137 181.6",
+      // Retrace straight upward
+      "L 134 181",
 
-      // Reach x-height
-      "C 143 170.8 153 165.2 165 165.2",
+      // Continue straight to x-height
+      "L 134 164",
+
+      // Smooth transition into hump
+      "C 136 159 144 157 156 157",
 
       // Rounded hump
-      "C 182 165.2 193 173.4 194 184.8",
+      "C 178 157 193 165 194 184",
 
-      // Descend right side
-      "C 195 197.5 188 212 185 223.9",
+      // Almost straight downward
+      "C 194 199 194 216 194 226",
 
-      // Reach baseline
-      "C 182 235.4 184 241 192 241",
+      // Begin rounded bottom
+      "C 194 235 197 241 204 241",
 
-      // Exit tail
-      "C 202 241 215 238.5 228 229",
+      // Rounded semicircle-like turn
+      "C 212 241 218 237 223 232",
+
+      // Smooth upward/right exit
+      "C 227 228 231 224 235 220",
     ].join(" "),
   ],
 
@@ -135,7 +144,7 @@ export const letterSh: LetterDefinition = {
   traceCoverage: 0.99,
 
   // Arrow 1 = s
-  // Arrow 2 = h stem
+  // Arrow 2 = straight h stem
   // Arrow 3 = h hump
   directionArrowFractions: [0.1, 0.12, 0.42],
 };

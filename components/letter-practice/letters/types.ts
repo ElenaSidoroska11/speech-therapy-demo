@@ -86,6 +86,12 @@ export type LetterDefinition = {
    * zoom out so short letters don’t dominate the tile.
    */
   previewScale?: number;
+  /**
+   * Shift the preview crop center in SVG units on X.
+   * Positive moves the glyph left (useful when a left hook/descender
+   * makes the stem look off-center, e.g. j).
+   */
+  previewOffsetX?: number;
   /** How close (in SVG units) a pointer must be to count as on-path */
   traceTolerance: number;
   /** Fraction of samples that must be covered on *each* path to succeed (0–1) */

@@ -52,7 +52,7 @@ export const letterLowerE: LetterDefinition = {
   ],
 
   strokeWidth: 21,
-  previewScale: 0.7,
+  previewScale: 0.8,
 
   traceTolerance: 28,
 

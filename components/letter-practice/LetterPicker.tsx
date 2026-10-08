@@ -1,4 +1,10 @@
-import { AVAILABLE_LETTERS, getLetter, isSelectableLetter, type LetterId } from "./letters";
+import {
+  AVAILABLE_LETTERS,
+  getLetter,
+  isSelectableLetter,
+  type LetterDefinition,
+  type LetterId,
+} from "./letters";
 import { LetterGlyphPreview } from "./LetterGlyphPreview";
 
 const SIDEBAR_BUTTON =
@@ -13,6 +19,10 @@ type LetterPickerProps = {
   placeholderCount?: number;
   disabled?: boolean;
   display?: "text" | "glyph";
+  /** Resolve a letter definition (defaults to cursive `getLetter`). */
+  resolveLetter?: (id: LetterId) => LetterDefinition;
+  /** Whether an id is selectable (defaults to cursive registry check). */
+  isLetterSelectable?: (id: LetterId) => boolean;
 };
 
 function LetterPickerContent({
@@ -20,13 +30,15 @@ function LetterPickerContent({
   display,
   selected,
   dense,
+  resolveLetter,
 }: {
   id: LetterId;
   display: "text" | "glyph";
   selected: boolean;
   dense?: boolean;
+  resolveLetter: (id: LetterId) => LetterDefinition;
 }) {
-  const letter = getLetter(id);
+  const letter = resolveLetter(id);
   const glyphStroke = selected ? "#FFFFFF" : "#FDA702";
 
   if (display === "glyph") {
@@ -65,6 +77,8 @@ export function LetterPicker({
   placeholderCount = 0,
   disabled = false,
   display = "text",
+  resolveLetter = getLetter,
+  isLetterSelectable = isSelectableLetter,
 }: LetterPickerProps) {
   const tiled = variant === "sidebar" || variant === "panel";
   const dense = variant === "panel";
@@ -80,7 +94,7 @@ export function LetterPicker({
         tiled ? GRID_BY_VARIANT[variant] : "flex flex-wrap justify-center gap-2"
       } ${className}`}>
       {letters.map((id) => {
-        const enabled = !disabled && isSelectableLetter(id);
+        const enabled = !disabled && isLetterSelectable(id);
         const selected = enabled && id === letterId;
         const shape = tiled
           ? `${SIDEBAR_BUTTON} aspect-square ${dense ? "p-1" : "p-1.5"}`
@@ -91,6 +105,7 @@ export function LetterPicker({
             display={display}
             selected={selected}
             dense={dense}
+            resolveLetter={resolveLetter}
           />
         );
 

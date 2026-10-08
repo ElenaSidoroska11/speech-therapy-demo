@@ -9,6 +9,11 @@ import {
 import { LetterPicker } from "./LetterPicker";
 import { LETTER_STYLES, type LetterStyle } from "./letterStyles";
 import type { LetterId } from "./letters";
+import {
+  AVAILABLE_PRINT_LETTERS,
+  getPrintLetter,
+  isSelectablePrintLetter,
+} from "./letters-print";
 
 type LetterCategoryViewProps = {
   style: LetterStyle | null;
@@ -43,9 +48,9 @@ export function LetterCategoryView({ style, onSelectLetter }: LetterCategoryView
                 ? "Choose a letter to start practicing"
                 : "Choose a letter style and letter to practice."}
             </p>
-            <p className="mt-1.5 max-w-lg font-(family-name:--font-display) text-sm font-bold leading-relaxed tracking-normal text-[#FDA702] sm:mt-3 sm:max-w-2xl sm:text-2xl md:max-w-3xl md:text-3xl">
-              Watch how the letter is written, then trace it with your finger, stylus or mouse.
-            </p>
+           <p className="mt-1.5 max-w-lg font-(family-name:--font-display) text-sm font-bold leading-snug tracking-normal text-[#E89500] sm:mt-3 sm:max-w-2xl sm:text-2xl md:max-w-3xl md:text-3xl">
+  Watch how the letter is written, then trace it with your finger, stylus or mouse.
+</p>
           </header>
         </div>
       </div>
@@ -58,7 +63,14 @@ export function LetterCategoryView({ style, onSelectLetter }: LetterCategoryView
                 {style === "victorian" ? (
                   <LetterPicker variant="panel" display="glyph" onSelect={onSelectLetter} />
                 ) : (
-                  <LetterPicker variant="panel" disabled />
+                  <LetterPicker
+                    variant="panel"
+                    display="glyph"
+                    letters={AVAILABLE_PRINT_LETTERS}
+                    resolveLetter={getPrintLetter}
+                    isLetterSelectable={isSelectablePrintLetter}
+                    onSelect={onSelectLetter}
+                  />
                 )}
               </StyleCard>
             ) : null}

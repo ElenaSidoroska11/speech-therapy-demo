@@ -4,6 +4,11 @@ import { motion } from "framer-motion";
 import { LetterPicker } from "./LetterPicker";
 import { LETTER_STYLES, type LetterStyle } from "./letterStyles";
 import type { LetterId } from "./letters";
+import {
+  AVAILABLE_PRINT_LETTERS,
+  getPrintLetter,
+  isSelectablePrintLetter,
+} from "./letters-print";
 
 type LetterStyleButtonProps = {
   label: string;
@@ -87,13 +92,24 @@ export function LetterPracticeSidebarFooter({
         onSelect={() => onSelectStyle(active.id)}
       />
       {showLetterPicker ? (
-        <LetterPicker
-          variant="sidebar"
-          letterId={letterId}
-          display={activeStyle === "victorian" ? "glyph" : "text"}
-          disabled={activeStyle === "unjoined"}
-          onSelect={onSelectLetter}
-        />
+        activeStyle === "victorian" ? (
+          <LetterPicker
+            variant="sidebar"
+            letterId={letterId}
+            display="glyph"
+            onSelect={onSelectLetter}
+          />
+        ) : (
+          <LetterPicker
+            variant="sidebar"
+            letterId={letterId}
+            display="glyph"
+            letters={AVAILABLE_PRINT_LETTERS}
+            resolveLetter={getPrintLetter}
+            isLetterSelectable={isSelectablePrintLetter}
+            onSelect={onSelectLetter}
+          />
+        )
       ) : null}
       <LetterStyleButton
         label={inactive.label}

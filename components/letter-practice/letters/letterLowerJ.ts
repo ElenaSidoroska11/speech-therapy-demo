@@ -72,6 +72,9 @@ export const letterLowerJ: LetterDefinition = {
 
   strokeWidth: LOWERCASE_ARTBOARD.strokeWidth,
 
+  // Left hook widens the ink box; nudge so the stem sits between the quotes.
+  previewOffsetX: 22,
+
   traceTolerance: 36,
 
   traceCoverage: 0.99,

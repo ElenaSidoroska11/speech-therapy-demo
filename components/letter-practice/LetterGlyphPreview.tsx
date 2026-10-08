@@ -4,6 +4,12 @@ type LetterGlyphPreviewProps = {
   letter: LetterDefinition;
   className?: string;
   stroke?: string;
+  /**
+   * Where to place the glyph inside the square crop.
+   * `center` (default) suits picker tiles; `baseline` pins ink to the
+   * bottom so short letters don’t float in the exercise header.
+   */
+  anchor?: "center" | "baseline";
 };
 
 /** Bounds from path coordinates (M/L/C/Q number pairs). */
@@ -43,6 +49,7 @@ export function LetterGlyphPreview({
   letter,
   className = "h-full w-full",
   stroke = "#FDA702",
+  anchor = "center",
 }: LetterGlyphPreviewProps) {
   const bounds = boundsFromPaths(letter.strokePaths);
   // Pad from the letter’s real stroke so round caps aren’t clipped.
@@ -62,8 +69,14 @@ export function LetterGlyphPreview({
     // Larger crop → smaller glyph; stroke stays tile-relative so scaled
     // letters (a, c) keep the same visual weight as the rest.
     const side = inkSide / scale;
-    const cx = (bounds.minX + bounds.maxX) / 2;
-    const cy = (bounds.minY + bounds.maxY) / 2;
+    const cx =
+      (bounds.minX + bounds.maxX) / 2 + (letter.previewOffsetX ?? 0);
+    // Center keeps picker tiles even; baseline pins short/scaled glyphs
+    // to the bottom of the crop (same floor as surrounding text).
+    const cy =
+      anchor === "baseline"
+        ? bounds.maxY + pad - side / 2
+        : (bounds.minY + bounds.maxY) / 2;
     return {
       crop: `${cx - side / 2} ${cy - side / 2} ${side} ${side}`,
       previewStroke: side * PREVIEW_STROKE_RATIO,
@@ -75,7 +88,9 @@ export function LetterGlyphPreview({
       viewBox={crop}
       className={className}
       aria-hidden
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio={
+        anchor === "baseline" ? "xMidYMax meet" : "xMidYMid meet"
+      }
     >
       {letter.strokePaths.map((d, i) => (
         <path

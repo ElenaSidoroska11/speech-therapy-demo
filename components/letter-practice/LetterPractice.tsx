@@ -42,7 +42,7 @@ export function LetterPractice({
     onModeChange("exercise");
   };
 
-  if (mode === "categories") {
+  if (mode === "categories" || !letterStyle) {
     return (
       <LetterCategoryView style={letterStyle} onSelectLetter={selectLetter} />
     );
@@ -50,9 +50,10 @@ export function LetterPractice({
 
   return (
     <TraceLetterExercise
-      key={letterId}
+      key={`${letterStyle}-${letterId}`}
       layout="landing"
       initialLetter={letterId}
+      letterStyle={letterStyle}
       onNextLetter={onLetterChange}
     />
   );
