@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Mic } from "lucide-react";
 import { LetterPractice } from "@/components/letter-practice/LetterPractice";
 import { LetterStyleSubNav, LetterPracticeSidebarFooter } from "@/components/letter-practice/LetterStyleSubNav";
-import type { LetterStyle } from "@/components/letter-practice/letterStyles";
+import { LETTER_STYLES, type LetterStyle } from "@/components/letter-practice/letterStyles";
 import type { LetterId } from "@/components/letter-practice/letters";
 import { HomeLanding, HomeScene } from "@/components/HomeLanding";
 import { ActivityNav, BrandSidebar } from "@/components/ActivityNav";
@@ -42,6 +42,7 @@ export function DemoShell() {
   };
 
   const selectLetterStyle = (style: LetterStyle) => {
+    if (!LETTER_STYLES.find((item) => item.id === style)?.selectable) return;
     setLetterStyle(style);
     setLetterPracticeMenuOpen(true);
     setLetterPracticeMode("categories");

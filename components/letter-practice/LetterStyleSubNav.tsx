@@ -13,17 +13,24 @@ import {
 type LetterStyleButtonProps = {
   label: string;
   active: boolean;
+  disabled?: boolean;
   onSelect: () => void;
 };
 
-export function LetterStyleButton({ label, active, onSelect }: LetterStyleButtonProps) {
+export function LetterStyleButton({
+  label,
+  active,
+  disabled = false,
+  onSelect,
+}: LetterStyleButtonProps) {
   return (
     <motion.button
       type="button"
       whileHover={{ scale: 1.03, x: 2 }}
       whileTap={{ scale: 0.97 }}
-      onClick={onSelect}
+      onClick={disabled ? undefined : onSelect}
       aria-current={active ? "true" : undefined}
+      aria-disabled={disabled || undefined}
       className={`w-full rounded-2xl px-4 py-2.5 text-center text-base font-extrabold shadow-lg ring-2 ring-white/70 backdrop-blur-md transition md:rounded-3xl md:px-6 md:py-4 md:text-xl ${
         active
           ? "bg-[#e52328] text-white  shadow-[0_6px_0_#B91C1C] hover:shadow-none"
@@ -52,6 +59,7 @@ export function LetterStyleSubNav({
           key={style.id}
           label={style.label}
           active={activeStyle === style.id}
+          disabled={!style.selectable}
           onSelect={() => onSelect(style.id)}
         />
       ))}
@@ -89,6 +97,7 @@ export function LetterPracticeSidebarFooter({
       <LetterStyleButton
         label={active.label}
         active
+        disabled={!active.selectable}
         onSelect={() => onSelectStyle(active.id)}
       />
       {showLetterPicker ? (
@@ -114,6 +123,7 @@ export function LetterPracticeSidebarFooter({
       <LetterStyleButton
         label={inactive.label}
         active={false}
+        disabled={!inactive.selectable}
         onSelect={() => onSelectStyle(inactive.id)}
       />
     </nav>
