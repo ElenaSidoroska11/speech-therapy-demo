@@ -47,16 +47,16 @@ export const letterLowerM: LetterDefinition = {
       // 1 — FIRST SECTION
       // =====================================================
 
-      "M 46 165",
+      "M 34 165",
 
       // Smooth approach to first top
-      "C 52 160 59 157 66 157",
+      "C 40 160 47 157 54 157",
 
       // First rounded top
-      "C 74 157 79 164 79 175",
+      "C 62 157 67 164 67 175",
 
       // Straight / upright first downstroke
-      "C 79 194 79 217 79 236",
+      "C 67 194 67 217 67 236",
 
 
       // =====================================================
@@ -64,16 +64,16 @@ export const letterLowerM: LetterDefinition = {
       // =====================================================
 
       // Rise toward second arch
-      "C 79 215 84 190 97 171",
+      "C 67 215 72 190 85 171",
 
       // Smooth approach to second top
-      "C 104 161 111 157 119 157",
+      "C 92 161 99 157 107 157",
 
       // Second rounded top
-      "C 128 157 134 164 134 175",
+      "C 116 157 122 164 122 175",
 
       // Straight / upright second downstroke
-      "C 134 194 134 217 134 236",
+      "C 122 194 122 217 122 236",
 
 
       // =====================================================
@@ -81,16 +81,16 @@ export const letterLowerM: LetterDefinition = {
       // =====================================================
 
       // Rise toward third arch
-      "C 134 215 140 190 153 171",
+      "C 122 215 128 190 141 171",
 
       // Smooth approach to third top
-      "C 160 161 167 157 175 157",
+      "C 148 161 155 157 163 157",
 
       // Third rounded top
-      "C 184 157 190 164 190 175",
+      "C 172 157 178 164 178 175",
 
       // Straight / upright third downstroke
-      "C 190 193 190 210 190 224",
+      "C 178 193 178 210 178 224",
 
 
       // =====================================================
@@ -98,19 +98,19 @@ export const letterLowerM: LetterDefinition = {
       // =====================================================
 
       // Continue vertically toward baseline
-      "C 190 229 190 233 193 235",
+      "C 178 229 178 233 181 235",
 
       // Wide smooth rounded bottom
-      "C 196 238 201 238 206 235",
+      "C 184 238 189 238 194 235",
 
       // Smooth transition toward the right
-      "C 211 232 215 228 219 223",
+      "C 199 232 203 228 207 223",
 
       // Gradual upward/right exit
-      "C 223 218 226 213 229 209",
+      "C 211 218 214 213 217 209",
 
       // Short smooth finish
-      "C 230 207 231 206 232 204",
+      "C 218 207 219 206 220 204",
     ].join(" "),
   ],
 
