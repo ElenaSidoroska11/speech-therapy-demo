@@ -27,7 +27,7 @@ export function TraceExerciseActions({
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           onClick={onClear}
-          className="inline-flex items-center gap-2 rounded-2xl bg-sky-500 px-4 py-3 font-extrabold text-white ring-2 ring-white/70">
+          className="mt-2 inline-flex items-center gap-2 rounded-2xl bg-sky-500 px-4 py-3 font-extrabold text-white ring-2 ring-white/70 md:mt-0">
           <RotateCcw className="h-7 w-7 text-white" strokeWidth={3} />
           <span className="text-xl leading-none">Clear</span>
         </motion.button>
@@ -39,7 +39,7 @@ export function TraceExerciseActions({
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           onClick={() => onNext(nextLetter)}
-          className="inline-flex items-center gap-2 rounded-2xl bg-[#FDA702] px-5 py-3 font-extrabold text-white  ring-2 ring-white/70">
+          className="mt-2 inline-flex items-center gap-2 rounded-2xl bg-[#FDA702] px-5 py-3 font-extrabold text-white ring-2 ring-white/70 md:mt-0">
           <span className="text-xl leading-none"> Next: {resolveLetter(nextLetter).letter}</span>
           <ArrowRight className="h-7 w-7 text-white" strokeWidth={3} />
         </motion.button>

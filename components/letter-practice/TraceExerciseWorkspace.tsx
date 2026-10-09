@@ -64,7 +64,8 @@ export function TraceExerciseWorkspace({
   const userStrokeWidth = Math.max(10, letter.strokeWidth * 0.45);
 
   return (
-    <div className="grid min-h-0 w-full flex-1 grid-cols-1 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-3 md:grid-cols-2 md:grid-rows-[minmax(0,1fr)] md:gap-5">
+    <div className="relative min-h-0 w-full flex-1">
+    <div className="absolute inset-0 snap-y snap-mandatory overflow-y-auto overscroll-y-contain md:grid md:snap-none md:grid-cols-2 md:grid-rows-[minmax(0,1fr)] md:gap-5 md:overflow-visible">
       <LetterStrokeFrame
         withCueImages={Boolean(letter.cueImages?.length)}
         wideLetter={wideLetter}
@@ -177,6 +178,7 @@ export function TraceExerciseWorkspace({
           )}
         </LetterStroke>
       </LetterStrokeFrame>
+    </div>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export function LetterStrokeFrame({
   const innerWidth = withCueImages || wideLetter ? "w-[92%]" : "w-[86%] sm:w-[78%]";
 
   return (
-    <div className="flex min-h-0 flex-col items-center gap-2">
+    <div className="flex h-full min-h-0 w-full snap-start snap-always flex-col items-center gap-2 md:snap-align-none md:snap-normal">
       {toolbar && (
         <div className="flex min-h-10 shrink-0 items-center justify-center sm:min-h-13">
           {toolbar}

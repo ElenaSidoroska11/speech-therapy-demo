@@ -15,7 +15,7 @@ export function ClinicLogo({
 }) {
   return (
     <Image
-      src="/logo.png"
+      src="/logo1.png"
       alt="Melbourne Literacy & Learning Clinic"
       width={1881}
       height={831}

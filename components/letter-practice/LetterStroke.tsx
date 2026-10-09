@@ -220,7 +220,7 @@ export function LetterStroke({
       <svg
         ref={svgRef}
         viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-        className="h-full w-full touch-none select-none"
+        className={`h-full w-full select-none ${interactive ? "touch-none" : "touch-pan-y"}`}
         role="img"
         aria-label={`Practice shape ${letter.letter}`}
         onPointerDown={onPointerDown}

@@ -170,7 +170,7 @@ export function TraceLetterExercise({
 
         <div className={CENTER_BODY_SLOT}>
           <div className={`${CENTER_CONTENT_WIDTH} max-w-lg sm:max-w-2xl md:max-w-none`}>
-            <div className="relative flex min-h-0 flex-1 flex-col p-1 sm:p-3 md:p-4">
+            <div className="relative flex min-h-0 flex-1 flex-col p-1 pb-10 sm:p-3 sm:pb-12 md:p-4">
               {celebrate && <CelebrationBurst />}
               <div className="relative z-10 flex min-h-0 w-full flex-1 flex-col md:aspect-16/10 md:flex-none">
                 <div className="flex min-h-0 flex-1 flex-col gap-3 md:absolute md:inset-0">
